@@ -1,6 +1,7 @@
 package team9.gccoffee.domain.order.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.global.common.BaseTimeEntity;
 
@@ -8,6 +9,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Builder
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseTimeEntity {
 
     @Id
@@ -29,7 +34,6 @@ public class Order extends BaseTimeEntity {
 
     private int totalPrice;
 }
-
 
 
 
