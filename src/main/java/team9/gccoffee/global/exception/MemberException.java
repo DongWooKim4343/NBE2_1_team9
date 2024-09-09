@@ -1,7 +1,8 @@
 package team9.gccoffee.global.exception;
 
 public enum MemberException {
-    NOT_FOUND("NOT_FOUND", 404);
+    NOT_FOUND("NOT_FOUND", 404),
+    NOT_REMOVED("Product NOT Removed", 400);
 
     private MemberTaskException memberTaskException;
 

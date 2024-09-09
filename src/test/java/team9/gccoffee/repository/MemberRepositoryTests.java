@@ -11,14 +11,12 @@ import java.util.stream.IntStream;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
@@ -38,7 +36,7 @@ public class MemberRepositoryTests {
     public void testInsert() {
         //given
         IntStream.rangeClosed(1, 100).forEach(i -> {
-            ; //range 는 마지막 값 포함 안되고 rangeClosed 는 마지막 값 포함된다.
+             //range 는 마지막 값 포함 안되고 rangeClosed 는 마지막 값 포함된다.
             Member member = Member.builder()
                     .name("user" + i)
                     .email("user" + i + "@aaa.com")
@@ -96,14 +94,20 @@ public class MemberRepositoryTests {
 
     }
 
-    //개인 주문 조회 //order table 에서 memberid 에 해당하는 값 가져오는 것인데 여기서 가능한가?
-//    @Test
-//    public void testGetOrder() {
-//        Long memberId = 3L;
-//
-//        Optional<List<Order>> foundOrders
-//    }
+    //개인 주문 조회
+    @Test
+    public void testFetchOrders() {
+        Long memberId = 3L;
 
+        Optional<Member> foundMember = memberRepository.findById(memberId);
+        assertTrue(foundMember.isPresent());
+
+        Member member = foundMember.get();
+        List<Order> orders = member.getOrderList();
+
+        //무엇으로 확인? 지정한 memberId 값과 orders 0번에 있는 member 값 같은지 비교
+        assertEquals(memberId, orders.get(0).getOrderId());
+    }
 
 
     //수정
