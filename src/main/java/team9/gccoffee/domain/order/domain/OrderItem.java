@@ -1,11 +1,16 @@
 package team9.gccoffee.domain.order.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 import team9.gccoffee.domain.product.domain.Category;
 import team9.gccoffee.domain.product.domain.Product;
 import team9.gccoffee.global.common.BaseTimeEntity;
 
 @Entity
+@Builder
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseTimeEntity {
 
     @Id
