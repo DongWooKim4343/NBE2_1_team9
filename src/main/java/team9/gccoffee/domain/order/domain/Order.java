@@ -21,8 +21,13 @@ public class Order extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @Column(nullable = false)
+    private String address;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
+
+    private int totalPrice;
 }
 
 

@@ -1,4 +1,8 @@
 package team9.gccoffee.domain.member.repository;
 
-public class MemberRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import team9.gccoffee.domain.member.domain.Member;
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
+
 }
