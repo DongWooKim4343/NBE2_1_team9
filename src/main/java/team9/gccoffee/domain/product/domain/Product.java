@@ -1,13 +1,7 @@
 package team9.gccoffee.domain.product.domain;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import team9.gccoffee.global.common.BaseTimeEntity;
 
 @Entity
