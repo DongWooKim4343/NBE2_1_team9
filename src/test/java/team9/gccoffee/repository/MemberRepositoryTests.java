@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,8 +60,49 @@ public class MemberRepositoryTests {
     }
 
     //조회
+    //memberId 로 멤버 개별 조회
+    @Test
+    public void testRead() {
+        //given
+        Long memberId = 3L;
 
+        //when
+        Optional<Member> foundMember = memberRepository.findById(memberId);
+        assertTrue(foundMember.isPresent());
 
+        //then
+        Member member = foundMember.get();
+        assertEquals(memberId, member.getMemberId());
+
+    }
+
+    //멤버 전체 조회 - 페이징
+    @Test
+    public void testList() {
+        //given
+        Pageable pageable = PageRequest.of(0,
+                20, Sort.by("memberId").ascending()); //한페이지에 20명씩
+        //when
+        Page<Member> memberListPage = memberRepository.findAll(pageable);
+        assertNotNull( memberListPage );
+        //then
+        assertEquals(100, memberListPage.getTotalElements());
+        assertEquals(5, memberListPage.getTotalPages());
+        assertEquals(0, memberListPage.getNumber());
+        assertEquals(20, memberListPage.getSize());
+        assertEquals(20, memberListPage.getContent().size());
+
+        memberListPage.getContent().forEach(System.out::println);
+
+    }
+
+    //개인 주문 조회 //order table 에서 memberid 에 해당하는 값 가져오는 것인데 여기서 가능한가?
+//    @Test
+//    public void testGetOrder() {
+//        Long memberId = 3L;
+//
+//        Optional<List<Order>> foundOrders
+//    }
 
 
 
