@@ -1,19 +1,23 @@
 package team9.gccoffee.domain.member.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.member.dto.MemberRequestDTO;
+import team9.gccoffee.domain.member.dto.MemberResponseDTO;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
+import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import team9.gccoffee.domain.member.repository.MemberRepository;
 
 import java.util.Optional;
+import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.global.exception.MemberException;
 
 @Service
@@ -24,45 +28,92 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
+    ///////
+    //조회
+    //멤버 개인 조회
     @Override
-    public Optional<Member> getMemberById(Long memberId) {
-        return memberRepository.findById(memberId);
+    public  MemberResponseDTO getMemberById(Long memberId) {
+        Optional<Member> foundMember = memberRepository.findById(memberId);
+
+        Member member = foundMember.orElseThrow(MemberException.NOT_FOUND::get);
+
+        return new MemberResponseDTO(member);
     }
 
+    //멤버 전체 조회
     @Override
-    public Page<Member> getAllMembers(Pageable pageable) {
+    public Page<Member> getAllMembers(MemberPageRequestDTO memberPageRequestDTO) {
+        Sort sort = Sort.by("memberId").descending();
+
+        Pageable pageable = memberPageRequestDTO.getPageable(sort);
         return memberRepository.findAll(pageable);
     }
 
-    @Override
-    public Member updateMember(MemberUpdateDTO memberUpdateDTO) {
+    //개인 주문 조회
+    @Transactional(readOnly = true)
+    public List<Order> getOrdersForMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found with ID: " + memberId));
 
-        return null;
+        return member.getOrderList();
+        //orderList 반환
     }
 
+
+    //////////
+
+    //수정
     @Override
-    public Member createMember(MemberRequestDTO memberRequestDTO) {
-        if (memberRequestDTO.getMemberType() == MemberType.ADMIN) {
-            if (!"ADMIN000".equals(memberRequestDTO.getAdminCode())) {
-                throw new SecurityException("Invalid admin code!!");
-            }
+    public MemberResponseDTO updateMember(MemberUpdateDTO memberUpdateDTO) {
+        Optional<Member> foundMember
+                = memberRepository.findById(memberUpdateDTO.getId());
+
+        Member member = foundMember.orElseThrow(MemberException.NOT_FOUND::get);
+        try {
+            member.changeName(memberUpdateDTO.getName());
+            member.changeEmail(memberUpdateDTO.getEmail());
+            member.changePostcode(memberUpdateDTO.getPostcode());
+            member.changeAddress(memberUpdateDTO.getAddress());
+            //member = memberUpdateDTO.toEntity();
+
+            return new MemberResponseDTO(member);
+        } catch (Exception e){
+            log.error("--- " + e.getMessage());
+            throw MemberException.NOT_MODIFIED.get();
         }
 
-
-
-        return null;
     }
 
 
+    //삭제
     @Override
     public void deleteMember(Long memberId) {
         Optional<Member> foundMember = memberRepository.findById(memberId);
         Member member = foundMember.orElseThrow(MemberException.NOT_FOUND::get);
 
         try {
-            memberRepository.deleteById(memberId);
+            memberRepository.delete(member);
         } catch (Exception e) {
             throw MemberException.NOT_REMOVED.get();
         }
+    }
+
+
+    //등록
+    @Override
+    public MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO) {
+        if (memberRequestDTO.getMemberType() == MemberType.ADMIN) {
+            if (!"ADMIN000".equals(memberRequestDTO.getAdminCode())) {
+                throw new SecurityException("Invalid admin code!!");
+            }
+        }
+        try {
+            Member member = memberRequestDTO.toEntity();
+            memberRepository.save(member);
+            return new MemberResponseDTO(member);
+        } catch (Exception e) {
+            throw MemberException.NOT_REGISTERED.get();
+        }
+
     }
 }

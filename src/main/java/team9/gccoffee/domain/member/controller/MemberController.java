@@ -41,24 +41,44 @@ public class MemberController {
 
     //조회 ////////////
     //memberId 로 멤버 개별 조회
-    //@GetMapping("/{memberId}")
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberResponseDTO> read(
+            @PathVariable("memberId") Long memberId) {
 
+        return ResponseEntity.ok(memberService.getMemberById(memberId));
+    }
 
 
     //멤버 전체 조회
-    //@GetMapping
+    @GetMapping
+    public ResponseEntity<Page<Member>> getMemberList(
+            @Validated MemberPageRequestDTO memberPageRequestDTO) {
+        return ResponseEntity.ok(memberService.getAllMembers(memberPageRequestDTO));
+
+    }
 
 
 
     //개인 주문 조회 myOrders/{memberId}
-    //@GetMapping("/myOrders/{memberId}")
-    //public ResponseEntity<>
+    @GetMapping("/myOrders/{memberId}")
+    public ResponseEntity<List<Order>> getMemberOrderList(
+            @PathVariable("memberId") Long memberId) {
+        return ResponseEntity.ok(memberService.getOrdersForMember(memberId));
+    }
+
 
 
     ////////////
 
     //수정 memberId
-    //@PutMapping("/{memberId}")
+    @PutMapping("/{memberId}")
+    public ResponseEntity<MemberResponseDTO> modify(
+            @Validated @RequestBody MemberUpdateDTO memberUpdateDTO,
+            @PathVariable("memberId") Long memberId ) {
+
+        return ResponseEntity.ok(memberService.updateMember(memberUpdateDTO));
+    }
+
 
 
 
@@ -66,9 +86,6 @@ public class MemberController {
     @DeleteMapping("/{memberId}")
     public ResponseEntity<Map<String, String>> remove(
             @PathVariable("memberId") Long mid) {
-
-        Long memberId = memberService.getMemberById(mid).get().getMemberId();
-
 
         memberService.deleteMember(mid);
 
