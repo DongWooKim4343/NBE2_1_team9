@@ -7,17 +7,22 @@ import team9.gccoffee.domain.member.domain.MemberType;
 
 @Data
 @NoArgsConstructor
-public class MemberResponseDTO {
+public class MemberResponseDTO { //response
 
     private String name;
     private String email;
-    private MemberType memberType;
     private String postcode;
+    private String address;
+    private MemberType memberType;
 
-    //response 쪽이니 dto 로 바꾸는 것만?
+
+
     public MemberResponseDTO(Member member) {
         this.name = member.getName();
         this.email = member.getEmail();
+        this.postcode = member.getPostcode();
+        this.address = member.getAddress();
+        // memberType?
 
     }
 
