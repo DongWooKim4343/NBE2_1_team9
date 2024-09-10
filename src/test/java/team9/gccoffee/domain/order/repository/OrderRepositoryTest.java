@@ -54,9 +54,10 @@ class OrderRepositoryTest {
         List<OrderItem> orderItems = createTestOrderItems(savedProduct, savedProduct2);
 
         String address = "서울시 종로구";
+        String postcode = "11111";
 
         // when
-        Order order = Order.createOrder(savedMember, orderItems, address);
+        Order order = Order.createOrder(savedMember, orderItems, address, postcode);
         Order savedOrder = orderRepository.save(order);
 
         // then
