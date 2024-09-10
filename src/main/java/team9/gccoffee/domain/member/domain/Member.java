@@ -1,18 +1,20 @@
 package team9.gccoffee.domain.member.domain;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.global.common.BaseTimeEntity;
 
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @ToString
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE) //없으면 builder 패턴에서 오류
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //jpa 가 entity 만들 때 파라미터 없는 것 필요
@@ -35,7 +37,8 @@ public class Member extends BaseTimeEntity {
     private String address;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<Order> orderList;
+    @Builder.Default
+    private List<Order> orderList = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
     private MemberType memberType;
