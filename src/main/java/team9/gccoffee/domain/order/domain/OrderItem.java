@@ -40,6 +40,10 @@ public class OrderItem extends BaseTimeEntity {
         this.order = order;
     }
 
+    public int calculateTotalPrice() {
+        return price * quantity;
+    }
+
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }

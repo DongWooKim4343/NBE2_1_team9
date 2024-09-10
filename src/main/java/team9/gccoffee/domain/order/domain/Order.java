@@ -54,17 +54,18 @@ public class Order extends BaseTimeEntity {
 
         order.address = address;
         order.orderStatus = OrderStatus.CREATED;
-
-        order.changeMember(member);
+        order.registerMember(member);
 
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
+            order.totalPrice += orderItem.calculateTotalPrice();
         }
+
         return order;
     }
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
-        orderItem.changeOrder(this);
+        orderItem.registerOrder(this);
     }
 }
