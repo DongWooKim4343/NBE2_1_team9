@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Getter @ToString
+@Getter @ToString(exclude = {"orderItems", "member"})
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,7 +43,10 @@ public class Order extends BaseTimeEntity {
     // 주문 생성 메서드
     public static Order createOrder(Member member, List<OrderItem> orderItems, String address) {
         Order order = new Order();
+
         order.address = address;
+        order.orderStatus = OrderStatus.CREATED;
+
         order.changeMember(member);
 
         for (OrderItem orderItem : orderItems) {
