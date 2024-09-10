@@ -1,10 +1,6 @@
 package team9.gccoffee.domain.member.controller;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Map;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -19,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team9.gccoffee.domain.member.dto.MemberRequestDTO;
-import team9.gccoffee.domain.member.dto.MemberResponse;
+import team9.gccoffee.domain.member.dto.MemberResponseDTO;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 import team9.gccoffee.domain.member.dto.PageRequestDTO;
 import team9.gccoffee.domain.member.service.MemberService;
@@ -34,7 +30,7 @@ public class MemberController {
 
     //등록
     @PostMapping
-    public ResponseEntity<MemberResponse> register(
+    public ResponseEntity<MemberResponseDTO> register(
             @Validated @RequestBody MemberRequestDTO memberRequestDTO) {
 
         //어떤 예외 처리 필요?
@@ -76,7 +72,7 @@ public class MemberController {
 
     //수정 memberId
     @PutMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> modify(
+    public ResponseEntity<MemberResponseDTO> modify(
             @Validated @RequestBody MemberUpdateDTO memberUpdateDTO,
             @PathVariable("memberId") Long memberId ) {
 

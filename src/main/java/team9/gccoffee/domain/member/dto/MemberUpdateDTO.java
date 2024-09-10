@@ -10,4 +10,6 @@ public class MemberUpdateDTO {
     private String name;
     private String email;
     private String postcode;
+
+
 }

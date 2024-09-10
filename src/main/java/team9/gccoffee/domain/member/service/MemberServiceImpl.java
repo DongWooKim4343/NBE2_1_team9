@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.member.dto.MemberRequestDTO;
-import team9.gccoffee.domain.member.dto.MemberResponse;
+import team9.gccoffee.domain.member.dto.MemberResponseDTO;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 import team9.gccoffee.domain.member.dto.PageRequestDTO;
 import team9.gccoffee.domain.member.repository.MemberRepository;
@@ -49,16 +49,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponse createMember(MemberRequestDTO memberRequestDTO) {
+    public MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO) {
         if (memberRequestDTO.getMemberType() == MemberType.ADMIN) {
             if (!"ADMIN000".equals(memberRequestDTO.getAdminCode())) {
                 throw new SecurityException("Invalid admin code!!");
             }
         }
+        try {
+            Member member = memberRequestDTO.toEntity();
+            memberRepository.save(member);
+            return new MemberResponseDTO(member);
+        } catch (Exception e) {
+            throw MemberException.NOT_REGISTERED.get();
+        }
 
-
-
-        return null;
     }
 
 
