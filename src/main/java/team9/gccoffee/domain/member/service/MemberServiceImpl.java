@@ -2,15 +2,17 @@ package team9.gccoffee.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.member.dto.MemberRequestDTO;
+import team9.gccoffee.domain.member.dto.MemberResponse;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
+import team9.gccoffee.domain.member.dto.PageRequestDTO;
 import team9.gccoffee.domain.member.repository.MemberRepository;
 
 import java.util.Optional;
@@ -26,13 +28,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Optional<Member> getMemberById(Long memberId) {
+
         return memberRepository.findById(memberId);
     }
 
     @Override
-    public Page<Member> getAllMembers(Pageable pageable) {
+    public Page<Member> getAllMembers(PageRequestDTO pageRequestDTO) {
+        Sort sort = Sort.by("pno").descending();
+        //page 정보를 v -> c -> s 니 이제 r로 보내야 한다.
+        Pageable pageable = pageRequestDTO.getPageable(sort);
         return memberRepository.findAll(pageable);
     }
+
+
 
     @Override
     public Member updateMember(MemberUpdateDTO memberUpdateDTO) {
@@ -41,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member createMember(MemberRequestDTO memberRequestDTO) {
+    public MemberResponse createMember(MemberRequestDTO memberRequestDTO) {
         if (memberRequestDTO.getMemberType() == MemberType.ADMIN) {
             if (!"ADMIN000".equals(memberRequestDTO.getAdminCode())) {
                 throw new SecurityException("Invalid admin code!!");
