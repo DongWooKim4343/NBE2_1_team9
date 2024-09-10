@@ -1,0 +1,25 @@
+.list-container {
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin: 0 auto;
+    display: flex;
+}
+
+.list-container div {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-container img {
+    max-width: 100px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.text {
+    margin-left: 20px;
+}
