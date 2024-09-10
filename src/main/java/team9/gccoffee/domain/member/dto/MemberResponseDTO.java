@@ -22,7 +22,7 @@ public class MemberResponseDTO { //response
         this.email = member.getEmail();
         this.postcode = member.getPostcode();
         this.address = member.getAddress();
-        // memberType?
+        this.memberType = member.getMemberType();
 
     }
 

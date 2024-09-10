@@ -19,6 +19,7 @@ import team9.gccoffee.domain.member.repository.MemberRepository;
 import java.util.Optional;
 import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.global.exception.MemberException;
+import team9.gccoffee.global.exception.MemberTaskException;
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +43,20 @@ public class MemberServiceImpl implements MemberService {
 
     //멤버 전체 조회
     @Override
-    public Page<Member> getAllMembers(MemberPageRequestDTO memberPageRequestDTO) {
-        Sort sort = Sort.by("memberId").descending();
+    public Page<Member> getAllMembers(MemberPageRequestDTO memberPageRequestDTO, Long memberId) {
+        Optional<Member> foundMember = memberRepository.findById(memberId);
+        Member member = foundMember.orElseThrow(MemberException.NOT_FOUND::get);
 
-        Pageable pageable = memberPageRequestDTO.getPageable(sort);
-        return memberRepository.findAll(pageable);
+        //해당 member 의 memberType 체크 하여 관리자인 경우 전체 조회 가능
+        if (member.getMemberType() == MemberType.ADMIN) {
+            Sort sort = Sort.by("memberId").descending();
+
+            Pageable pageable = memberPageRequestDTO.getPageable(sort);
+            return memberRepository.findAll(pageable);
+       } else {
+            throw MemberException.ACCESS_DENIED.get();
+        }
+
     }
 
     //개인 주문 조회

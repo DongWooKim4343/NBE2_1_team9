@@ -52,11 +52,12 @@ public class MemberController {
     }
 
 
-    //멤버 전체 조회
-    @GetMapping
+    //멤버 전체 조회 - memberId 로 관리자인가 확인
+    @GetMapping("/list/{memberId}")
     public ResponseEntity<Page<Member>> getMemberList(
-            @Validated MemberPageRequestDTO memberPageRequestDTO) {
-        return ResponseEntity.ok(memberService.getAllMembers(memberPageRequestDTO));
+            @Validated MemberPageRequestDTO memberPageRequestDTO,
+            @PathVariable("memberId") Long memberId) {
+        return ResponseEntity.ok(memberService.getAllMembers(memberPageRequestDTO, memberId));
 
     }
 

@@ -91,7 +91,11 @@ class MemberServiceImplTest {
                 .page(1)
                 .size(20)
                 .build();
-        Page<Member> members = memberService.getAllMembers(requestDTO);
+
+        //Long mId1 = saveMember1.getMemberId();    // 일반 멤버
+        Long mId2 = saveMember2.getMemberId();      // 관리자
+
+        Page<Member> members = memberService.getAllMembers(requestDTO, mId2);
         assertThat(members).isNotNull();
         assertThat(members.getTotalElements()).isEqualTo(2);
     }
