@@ -3,7 +3,9 @@ package team9.gccoffee.global.exception;
 public enum MemberException {
     NOT_FOUND("NOT_FOUND", 404),
     NOT_REMOVED("Member NOT Removed", 400),
-    NOT_REGISTERED("Member NOT Registered", 400);
+    NOT_REGISTERED("Member NOT Registered", 400),
+    NOT_MODIFIED("Product NOT Modified", 400),
+    BAD_CREDENTIALS("BAD_CREDENTIALS", 401);
 
     private MemberTaskException memberTaskException;
 

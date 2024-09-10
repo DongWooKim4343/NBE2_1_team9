@@ -14,7 +14,7 @@ import org.springframework.data.domain.Sort;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PageRequestDTO {
+public class MemberPageRequestDTO {
 
     @Builder.Default        //페이지 기본 값 설정
     @Min(1)
