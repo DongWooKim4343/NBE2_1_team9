@@ -1,6 +1,7 @@
 package team9.gccoffee.domain.order.domain;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.*;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.global.common.BaseTimeEntity;
@@ -9,8 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Getter @ToString
 @Builder
-@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseTimeEntity {
@@ -30,13 +31,29 @@ public class Order extends BaseTimeEntity {
     private String address;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private List<OrderItem> orderItems;
+    @Builder.Default
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     private int totalPrice;
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
+
+    // 주문 생성 메서드
+    public static Order createOrder(Member member, List<OrderItem> orderItems, String address) {
+        Order order = new Order();
+        order.address = address;
+        order.changeMember(member);
+
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        return order;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.changeOrder(this);
+    }
 }
-
-
-
-
-
-

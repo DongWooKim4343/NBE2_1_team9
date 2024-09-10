@@ -8,7 +8,7 @@ import team9.gccoffee.global.common.BaseTimeEntity;
 
 @Entity
 @Builder
-@Getter
+@Getter @ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseTimeEntity {
@@ -34,4 +34,8 @@ public class OrderItem extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int quantity;
+
+    public void changeOrder(Order order) {
+        this.order = order;
+    }
 }
