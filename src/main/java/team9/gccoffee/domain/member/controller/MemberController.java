@@ -70,6 +70,7 @@ public class MemberController {
     }
 
 
+
     ////////////
 
     //수정 memberId
@@ -88,6 +89,8 @@ public class MemberController {
     @DeleteMapping("/{memberId}")
     public ResponseEntity<Map<String, String>> remove(
             @PathVariable("memberId") Long mid) {
+
+        Long memberId = memberService.getMemberById(mid).get().getMemberId();
 
 
         memberService.deleteMember(mid);

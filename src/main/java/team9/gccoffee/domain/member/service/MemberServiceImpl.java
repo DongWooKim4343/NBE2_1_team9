@@ -80,6 +80,7 @@ public class MemberServiceImpl implements MemberService {
             log.error("--- " + e.getMessage());
             throw MemberException.NOT_MODIFIED.get();
         }
+
     }
 
 

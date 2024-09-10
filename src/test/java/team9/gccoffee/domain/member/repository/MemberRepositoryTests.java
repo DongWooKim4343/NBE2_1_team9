@@ -1,4 +1,4 @@
-package team9.gccoffee.repository;
+package team9.gccoffee.domain.member.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
