@@ -90,9 +90,6 @@ public class MemberController {
     public ResponseEntity<Map<String, String>> remove(
             @PathVariable("memberId") Long mid) {
 
-        Long memberId = memberService.getMemberById(mid).get().getMemberId();
-
-
         memberService.deleteMember(mid);
 
         return ResponseEntity.ok(Map.of("result", "success"));

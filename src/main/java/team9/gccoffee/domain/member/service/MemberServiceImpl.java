@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
     public  MemberResponseDTO getMemberById(Long memberId) {
         Optional<Member> foundMember = memberRepository.findById(memberId);
 
-        Member member = foundMember.orElseThrow(MemberException.BAD_CREDENTIALS::get);
+        Member member = foundMember.orElseThrow(MemberException.NOT_FOUND::get);
 
         return new MemberResponseDTO(member);
     }
@@ -74,6 +74,7 @@ public class MemberServiceImpl implements MemberService {
             member.changeEmail(memberUpdateDTO.getEmail());
             member.changePostcode(memberUpdateDTO.getPostcode());
             member.changeAddress(memberUpdateDTO.getAddress());
+            //member = memberUpdateDTO.toEntity();
 
             return new MemberResponseDTO(member);
         } catch (Exception e){
@@ -91,7 +92,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = foundMember.orElseThrow(MemberException.NOT_FOUND::get);
 
         try {
-            memberRepository.deleteById(memberId);
+            memberRepository.delete(member);
         } catch (Exception e) {
             throw MemberException.NOT_REMOVED.get();
         }
