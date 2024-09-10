@@ -8,7 +8,7 @@ import team9.gccoffee.global.common.BaseTimeEntity;
 
 @Entity
 @Builder
-@Getter
+@Getter @ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseTimeEntity {
@@ -34,4 +34,21 @@ public class OrderItem extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int quantity;
+
+    // 비즈니스 로직
+    public void registerOrder(Order order) {
+        this.order = order;
+    }
+
+    public int calculateTotalPrice() {
+        return price * quantity;
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void cancel() {
+        product.addStockQuantity(quantity);
+    }
 }
