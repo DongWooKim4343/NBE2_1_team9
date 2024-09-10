@@ -35,7 +35,16 @@ public class OrderItem extends BaseTimeEntity {
     @Column(nullable = false)
     private int quantity;
 
-    public void changeOrder(Order order) {
+    // 비즈니스 로직
+    public void registerOrder(Order order) {
         this.order = order;
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void cancel() {
+        product.addStockQuantity(quantity);
     }
 }

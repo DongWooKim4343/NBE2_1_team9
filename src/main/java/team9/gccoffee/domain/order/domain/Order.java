@@ -30,14 +30,22 @@ public class Order extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
     private int totalPrice;
 
-    public void changeMember(Member member) {
+    public void registerMember(Member member) {
         this.member = member;
+    }
+
+    public void changeOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public void changeAddress(String address) {
+        this.address = address;
     }
 
     // 주문 생성 메서드

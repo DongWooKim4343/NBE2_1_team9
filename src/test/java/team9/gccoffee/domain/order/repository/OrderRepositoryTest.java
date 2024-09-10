@@ -43,6 +43,7 @@ class OrderRepositoryTest {
 
     @Test
     @DisplayName("Order 를 저장할 수 있어야 한다.")
+    @org.junit.jupiter.api.Order(1)
     @Commit
     void createOrderTest() {
         // given
@@ -66,6 +67,7 @@ class OrderRepositoryTest {
 
     @Test
     @DisplayName("Order 를 조회할 수 있어야 한다.")
+    @org.junit.jupiter.api.Order(2)
     void selectOrderTest() {
         // given
         Long orderId = 1L;
@@ -83,14 +85,54 @@ class OrderRepositoryTest {
     }
 
     @Test
-    @DisplayName("Order 를 수정할 수 있어야 한다.")
-    void updateOrderTest() {
+    @DisplayName("OrderItem 의 수량을 수정할 수 있어야 한다.")
+    @org.junit.jupiter.api.Order(3)
+    void updateOrderItemTest() {
         // given
-
+        OrderItem orderItem = orderItemRepository.findById(1L).get();
 
         // when
+        orderItem.changeQuantity(2);
 
         // then
+        orderItem = orderItemRepository.findById(1L).get();
+        assertThat(orderItem.getQuantity()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("Order 를 수정할 수 있어야 한다.")
+    @org.junit.jupiter.api.Order(4)
+    void updateOrderTest() {
+        // given
+        Order order = orderRepository.findById(1L).get();
+        String newAddress = "서울시 서초구";
+
+        // when
+        order.changeAddress(newAddress);
+        order.changeOrderStatus(OrderStatus.COMPLETED);
+        Order updateOrder = orderRepository.findById(1L).get();
+
+        // then
+        assertThat(updateOrder.getAddress()).isEqualTo(newAddress);
+        assertThat(updateOrder.getOrderStatus()).isEqualTo(OrderStatus.COMPLETED);
+    }
+
+    @Test
+    @DisplayName("Order 를 삭제할 수 있어야 한다.")
+    @org.junit.jupiter.api.Order(5)
+    void deleteOrderTest() {
+        // given
+        Order order = orderRepository.findById(1L).get();
+
+        // when
+        orderRepository.delete(order);
+
+        // then
+        Optional<Order> optionalOrder = orderRepository.findById(1L);
+        assertThat(optionalOrder.isEmpty()).isTrue();
+
+        List<OrderItem> orderItems = orderItemRepository.findByOrderId(1L);
+        assertThat(orderItems.isEmpty()).isTrue();
     }
 
     // 멤버 생성 로직 분리
@@ -114,6 +156,7 @@ class OrderRepositoryTest {
                 .description(description)
                 .stockQuantity(stockQuantity)
                 .build();
+
         return productRepository.save(product);
     }
 
