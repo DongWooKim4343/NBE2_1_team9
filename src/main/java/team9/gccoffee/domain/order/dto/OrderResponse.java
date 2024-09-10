@@ -1,5 +1,6 @@
 package team9.gccoffee.domain.order.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class OrderResponse {
 
     private String postcode;
 
-    private List<OrderItem> orderItems;
+    private List<OrderItemResponse> orderItemResponses;
 
     private int totalPrice;
 
@@ -27,7 +28,16 @@ public class OrderResponse {
         email = member.getEmail();
         postcode = member.getPostcode();
         address = order.getAddress();
-        orderItems = order.getOrderItems();
+        orderItemResponses = getOrderItemResponse(order.getOrderItems());
         totalPrice = order.getTotalPrice();
+    }
+
+    private List<OrderItemResponse> getOrderItemResponse(List<OrderItem> orderItems) {
+        List<OrderItemResponse> orderItemResponses = new ArrayList<>();
+
+        for (OrderItem orderItem : orderItems) {
+            orderItemResponses.add(new OrderItemResponse(orderItem));
+        }
+        return orderItemResponses;
     }
 }

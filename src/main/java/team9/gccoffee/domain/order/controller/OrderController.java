@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team9.gccoffee.domain.member.domain.Member;
-import team9.gccoffee.domain.member.service.MemberService;
-import team9.gccoffee.domain.order.dto.OrderItemRequest;
 import team9.gccoffee.domain.order.dto.OrderItemResponse;
 import team9.gccoffee.domain.order.dto.OrderRequest;
 import team9.gccoffee.domain.order.dto.OrderResponse;
@@ -26,7 +23,6 @@ import team9.gccoffee.domain.order.service.OrderService;
 @Slf4j
 public class OrderController {
 
-    private final MemberService memberService;
     private final OrderService orderService;
 
     @PostMapping
@@ -36,15 +32,8 @@ public class OrderController {
         log.info("OrderController.createOrder() call !!");
         log.info("orderRequest => {}", orderRequest);
 
-        // TODO Member id 조회 로직
-        Member member = memberService.getMemberById(orderRequest.getMemberId()).get();
 
-        // TODO Product 유효성 검사
-        for (OrderItemRequest orderItem : orderRequest.getOrderItems()) {
-            Long productId = orderItem.getProductId();
-        }
-
-        OrderResponse orderResponse = orderService.createOrder(member, orderRequest);
+        OrderResponse orderResponse = orderService.createOrder(orderRequest);
 
         return ResponseEntity.ok(orderResponse);
     }
@@ -59,8 +48,9 @@ public class OrderController {
     public ResponseEntity<OrderResponse> getOrder(
             @PathVariable("orderId") Long orderId
     ) {
+        OrderResponse orderResponse = orderService.getOrderResponse(orderId);
 
-        return null;
+        return ResponseEntity.ok(orderResponse);
     }
 
     @PutMapping("/{orderId}")
