@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team9.gccoffee.global.common.BaseTimeEntity;
+import team9.gccoffee.global.exception.ErrorCode;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 @Entity
 @Builder @Getter
@@ -34,6 +36,16 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private int stockQuantity;
 
+    //findByProductId를 string값으로
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
     // 비즈니스 로직
     public void addStockQuantity(int quantity) {
         this.stockQuantity += quantity;
@@ -43,7 +55,7 @@ public class Product extends BaseTimeEntity {
         int restStock = this.stockQuantity - quantity;
 
         if (restStock < 0) {
-            throw new IllegalArgumentException("need more stock");
+            throw new GcCoffeeCustomException(ErrorCode.ORDER_QUANTITY_EXCEEDS_STOCK);
         }
         this.stockQuantity = restStock;
     }
