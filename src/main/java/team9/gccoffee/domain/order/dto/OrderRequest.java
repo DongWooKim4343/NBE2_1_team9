@@ -15,7 +15,7 @@ public class OrderRequest {
     private Long memberId;
 
     @NotNull
-    private List<OrderItemRequest> orderItems;
+    private List<OrderItemRequest> orderItemRequests;
 
     @NotNull
     private String postcode;

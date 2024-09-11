@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team9.gccoffee.domain.order.dto.OrderItemResponse;
+import team9.gccoffee.domain.order.dto.OrderItemUpdateDTO;
 import team9.gccoffee.domain.order.dto.OrderRequest;
 import team9.gccoffee.domain.order.dto.OrderResponse;
+import team9.gccoffee.domain.order.dto.OrderUpdateRequest;
 import team9.gccoffee.domain.order.service.OrderService;
 
 @RestController
@@ -28,10 +30,9 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
             @RequestBody OrderRequest orderRequest
-            ) {
+    ) {
         log.info("OrderController.createOrder() call !!");
         log.info("orderRequest => {}", orderRequest);
-
 
         OrderResponse orderResponse = orderService.createOrder(orderRequest);
 
@@ -40,8 +41,9 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getOrderList() {
+        List<OrderResponse> orderResponses = orderService.getOrderResponses();
 
-        return null;
+        return ResponseEntity.ok(orderResponses);
     }
 
     @GetMapping("/{orderId}")
@@ -55,17 +57,33 @@ public class OrderController {
 
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderResponse> updateOrder(
+            @PathVariable("orderId") Long orderId,
+            @RequestBody OrderUpdateRequest orderUpdateRequest
+    ) {
+        log.info("OrderController.updateOrder() call !!");
+        log.info("orderUpdateRequest => {}", orderUpdateRequest);
+
+        OrderResponse orderResponse = orderService.updateOrder(orderId, orderUpdateRequest);
+
+        return ResponseEntity.ok(orderResponse);
+    }
+
+    // 관리자 - 주문 처리 메서드
+    @PostMapping("/{orderId}/complete")
+    public ResponseEntity<Void> completeOrder(
             @PathVariable("orderId") Long orderId
     ) {
+        orderService.completeOrder(orderId);
 
         return null;
     }
 
-    // 관리자 - 주문 처리 메서드
-    @PutMapping("/{orderId}/complete")
-    public ResponseEntity<OrderResponse> completeOrder(
+    // 고객 - 주문 취소 메서드
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<Void> cancelorder(
             @PathVariable("orderId") Long orderId
     ) {
+        orderService.cancelOrder(orderId);
 
         return null;
     }
@@ -74,6 +92,7 @@ public class OrderController {
     public ResponseEntity<Void> removeOrder(
             @PathVariable("orderId") Long orderId
     ) {
+        orderService.deleteOrder(orderId);
 
         return ResponseEntity.noContent().build();
     }
@@ -82,15 +101,18 @@ public class OrderController {
     public ResponseEntity<OrderItemResponse> getOrderItem(
             @PathVariable("orderItemId") Long orderItemId
     ) {
+        OrderItemResponse orderItem = orderService.getOrderItem(orderItemId);
 
-        return null;
+        return ResponseEntity.ok(orderItem);
     }
 
     @PutMapping("/order-item/{orderItemId}")
     public ResponseEntity<OrderItemResponse> updateOrderItem(
-            @PathVariable("orderItemId") Long orderItemId
+            @PathVariable("orderItemId") Long orderItemId,
+            @RequestBody OrderItemUpdateDTO orderItemUpdateDTO
     ) {
+        OrderItemResponse orderItem = orderService.updateOrderItem(orderItemId, orderItemUpdateDTO);
 
-        return null;
+        return ResponseEntity.ok(orderItem);
     }
 }
