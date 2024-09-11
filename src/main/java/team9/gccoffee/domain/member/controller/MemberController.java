@@ -22,6 +22,7 @@ import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import team9.gccoffee.domain.member.service.MemberService;
 import team9.gccoffee.domain.order.domain.Order;
+import team9.gccoffee.global.exception.MemberException;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,8 +36,6 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<MemberResponseDTO> register(
             @Validated @RequestBody MemberRequestDTO memberRequestDTO) {
-
-        //어떤 예외 처리 필요?
 
         return ResponseEntity.ok(memberService.createMember(memberRequestDTO));
     }
@@ -57,6 +56,7 @@ public class MemberController {
     public ResponseEntity<Page<Member>> getMemberList(
             @Validated MemberPageRequestDTO memberPageRequestDTO,
             @PathVariable("memberId") Long memberId) {
+
         return ResponseEntity.ok(memberService.getAllMembers(memberPageRequestDTO, memberId));
 
     }
@@ -71,7 +71,6 @@ public class MemberController {
     }
 
 
-
     ////////////
 
     //수정 memberId
@@ -80,10 +79,12 @@ public class MemberController {
             @Validated @RequestBody MemberUpdateDTO memberUpdateDTO,
             @PathVariable("memberId") Long memberId ) {
 
+        if( !memberId.equals(memberUpdateDTO.getId())) {
+            throw MemberException.NOT_MATCHED.get();
+        }
+
         return ResponseEntity.ok(memberService.updateMember(memberUpdateDTO));
     }
-
-
 
 
     //삭제 memberId

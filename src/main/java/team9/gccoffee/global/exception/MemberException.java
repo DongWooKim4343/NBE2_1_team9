@@ -2,6 +2,7 @@ package team9.gccoffee.global.exception;
 
 public enum MemberException {
     ACCESS_DENIED("ACCESS_DENIED", 403),
+    NOT_MATCHED("Customer NOT Matched", 400),
     NOT_FOUND("NOT_FOUND", 404),
     NOT_REMOVED("Member NOT Removed", 400),
     NOT_REGISTERED("Member NOT Registered", 400),
