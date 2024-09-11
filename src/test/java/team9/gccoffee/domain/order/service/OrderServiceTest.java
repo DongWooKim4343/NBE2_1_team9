@@ -28,7 +28,7 @@ import team9.gccoffee.domain.order.repository.OrderRepository;
 import team9.gccoffee.domain.product.domain.Category;
 import team9.gccoffee.domain.product.domain.Product;
 import team9.gccoffee.domain.product.repository.ProductRepository;
-import team9.gccoffee.global.exception.order.OrderTaskException;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 @SpringBootTest
 @Slf4j
@@ -99,8 +99,8 @@ class OrderServiceTest {
 
         // then
         assertThatThrownBy(() -> orderService.createOrder(orderRequest))
-                .isExactlyInstanceOf(OrderTaskException.class)
-                .hasMessage("Order quantity is over than product stock");
+                .isExactlyInstanceOf(GcCoffeeCustomException.class)
+                .hasMessage("주문 수량이 재고를 초과했습니다.");
     }
 
     @Test

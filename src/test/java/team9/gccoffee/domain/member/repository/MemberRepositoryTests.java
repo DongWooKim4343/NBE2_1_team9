@@ -23,7 +23,8 @@ import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.domain.order.repository.OrderRepository;
-import team9.gccoffee.global.exception.member.MemberException;
+import team9.gccoffee.global.exception.ErrorCode;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 @SpringBootTest
 @Log4j2
@@ -132,7 +133,7 @@ public class MemberRepositoryTests {
 
         //조회 결과가 없으면 MemberTaskException 으로 NOT_FOUND 예외를 발생
         //값이 없다면 예외 던지기
-        foundMember.orElseThrow(MemberException.NOT_FOUND::get);
+        foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         //assertTrue(foundMember.isPresent());
 

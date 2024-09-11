@@ -14,10 +14,10 @@ import team9.gccoffee.domain.member.dto.MemberRequestDTO;
 import team9.gccoffee.domain.member.dto.MemberResponseDTO;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 import team9.gccoffee.domain.member.repository.MemberRepository;
-import team9.gccoffee.global.exception.member.MemberTaskException;
 
 import java.util.Arrays;
 import java.util.List;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -172,11 +172,11 @@ class MemberServiceImplTest {
 
         // 삭제된 회원을 조회할 때 예외 발생 확인
         assertThatThrownBy(() -> memberService.getMemberById(member1.getMemberId()))
-                .isInstanceOf(MemberTaskException.class)
+                .isInstanceOf(GcCoffeeCustomException.class)
                 .hasMessage("NOT_FOUND");
 
         assertThatThrownBy(() -> memberService.getMemberById(member2.getMemberId()))
-                .isInstanceOf(MemberTaskException.class)
+                .isInstanceOf(GcCoffeeCustomException.class)
                 .hasMessage("NOT_FOUND");
     }
 }
