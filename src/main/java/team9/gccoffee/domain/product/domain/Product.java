@@ -33,4 +33,18 @@ public class Product extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int stockQuantity;
+
+    // 비즈니스 로직
+    public void addStockQuantity(int quantity) {
+        this.stockQuantity += quantity;
+    }
+
+    public void removeStock(int quantity) {
+        int restStock = this.stockQuantity - quantity;
+
+        if (restStock < 0) {
+            throw new IllegalArgumentException("need more stock");
+        }
+        this.stockQuantity = restStock;
+    }
 }

@@ -7,9 +7,7 @@ import team9.gccoffee.domain.product.domain.Product;
 import team9.gccoffee.global.common.BaseTimeEntity;
 
 @Entity
-@Builder
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseTimeEntity {
 
@@ -17,7 +15,7 @@ public class OrderItem extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderItemId;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -34,4 +32,33 @@ public class OrderItem extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int quantity;
+
+    // 생성 메서드
+    public static OrderItem createOrderItem(Product product, int quantity) {
+        OrderItem orderItem = new OrderItem();
+
+        orderItem.product = product;
+        orderItem.category = product.getCategory();
+        orderItem.price = product.getPrice();
+        orderItem.quantity = quantity;
+
+        return orderItem;
+    }
+
+    // 비즈니스 로직
+    public void registerOrder(Order order) {
+        this.order = order;
+    }
+
+    public int calculateTotalPrice() {
+        return price * quantity;
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void cancel() {
+        product.addStockQuantity(quantity);
+    }
 }
