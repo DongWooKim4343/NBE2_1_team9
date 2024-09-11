@@ -9,9 +9,13 @@ import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.repository.MemberRepository;
 import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.domain.order.domain.OrderItem;
+import team9.gccoffee.domain.order.domain.OrderStatus;
 import team9.gccoffee.domain.order.dto.OrderItemRequest;
+import team9.gccoffee.domain.order.dto.OrderItemResponse;
+import team9.gccoffee.domain.order.dto.OrderItemUpdateDTO;
 import team9.gccoffee.domain.order.dto.OrderRequest;
 import team9.gccoffee.domain.order.dto.OrderResponse;
+import team9.gccoffee.domain.order.dto.OrderUpdateRequest;
 import team9.gccoffee.domain.order.repository.OrderItemRepository;
 import team9.gccoffee.domain.order.repository.OrderRepository;
 import team9.gccoffee.domain.product.domain.Product;
@@ -35,13 +39,16 @@ public class OrderService {
                 .orElseThrow(MemberException.NOT_FOUND::get);
 
         // 주문 아이템 생성 및 저장
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItem orderItem : getOrderItems(orderRequest.getOrderItems())) {
-            orderItems.add(orderItemRepository.save(orderItem));
+        List<OrderItem> orderItems = getOrderItems(orderRequest.getOrderItemRequests());
+
+        List<OrderItem> savedOrderItems = new ArrayList<>();
+
+        for (OrderItem orderItem : orderItems) {
+            savedOrderItems.add(orderItemRepository.save(orderItem));
         }
 
         // 주문 생성
-        Order order = Order.createOrder(member, orderItems, orderRequest.getAddress(), orderRequest.getPostcode());
+        Order order = Order.createOrder(member, savedOrderItems, orderRequest.getAddress(), orderRequest.getPostcode());
 
         // 주문 저장
         Order savedOrder = orderRepository.save(order);
@@ -64,6 +71,8 @@ public class OrderService {
         Product product = productRepository.findById(orderItemRequest.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
+        product.removeStock(orderItemRequest.getQuantity());
+
         if (!orderItemRequest.getCategory().equals(product.getCategory())
                 || orderItemRequest.getPrice() != product.getPrice()) {
             throw new IllegalArgumentException("Product validation failed");
@@ -75,5 +84,75 @@ public class OrderService {
     public OrderResponse getOrderResponse(Long orderId) {
         return orderRepository.getOrderResponse(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+    }
+
+    public List<OrderResponse> getOrderResponses() {
+        List<OrderResponse> orderResponseList = orderRepository.getOrderResponseList();
+
+        if (orderResponseList.isEmpty()) {
+            throw new IllegalArgumentException("There's no order");
+        }
+
+        return orderResponseList;
+    }
+
+    public OrderResponse updateOrder(Long orderId, OrderUpdateRequest orderUpdateRequest) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        order.changeAddress(orderUpdateRequest.getAddress());
+        order.changePostcode(orderUpdateRequest.getPostcode());
+
+        return new OrderResponse(order);
+    }
+
+    public void completeOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        if (order.getOrderStatus().equals(OrderStatus.CANCELLED) || order.getOrderStatus()
+                .equals(OrderStatus.COMPLETED)) {
+            throw new IllegalStateException("Order is completed or canceled Error");
+        }
+
+        order.changeOrderStatus(OrderStatus.COMPLETED);
+    }
+
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        if (order.getOrderStatus().equals(OrderStatus.COMPLETED)) {
+            throw new IllegalStateException("Order is completed");
+        }
+
+        order.cancel();
+    }
+
+    public void deleteOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        if (!order.getOrderStatus().equals(OrderStatus.CANCELLED)){
+            throw new IllegalStateException("Order is not canceled");
+        }
+
+        orderRepository.delete(order);
+    }
+
+    public OrderItemResponse getOrderItem(Long orderItemId) {
+        OrderItemResponse orderItemResponse = orderItemRepository.getOrderItemResponse(orderItemId)
+                .orElseThrow(() -> new IllegalArgumentException("Order item not found"));
+
+        return orderItemResponse;
+    }
+
+    public OrderItemResponse updateOrderItem(Long orderItemId, OrderItemUpdateDTO orderItemUpdateDTO) {
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+        orderItem.changeQuantity(orderItemUpdateDTO.getQuantity());
+
+        return new OrderItemResponse(orderItem);
     }
 }

@@ -17,7 +17,7 @@ import team9.gccoffee.domain.order.domain.Order;
 
 public interface MemberService {
     public MemberResponseDTO getMemberById(Long memberId); //멤버 개별 조회
-    public Page<Member> getAllMembers(MemberPageRequestDTO memberPageRequestDTO); //전체 멤버 조회
+    public Page<Member> getAllMembers(MemberPageRequestDTO memberPageRequestDTO, Long memberId); // 관리자 전체 멤버 조회
     public List<Order> getOrdersForMember(Long memberId);
 
     public MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO); //멤버 생성, 관리자 고객
