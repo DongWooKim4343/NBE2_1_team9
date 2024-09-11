@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import team9.gccoffee.global.common.BaseTimeEntity;
 
 @Entity
-@Builder @Getter
+@Getter
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseTimeEntity {
@@ -56,5 +58,25 @@ public class Product extends BaseTimeEntity {
             throw new IllegalArgumentException("need more stock");
         }
         this.stockQuantity = restStock;
+    }
+
+    public void changeProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void changeCategory(Category category) {
+        this.category = category;
+    }
+
+    public void changePrice(int price) {
+        this.price = price;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 }

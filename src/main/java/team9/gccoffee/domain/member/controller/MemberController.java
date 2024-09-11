@@ -63,7 +63,7 @@ public class MemberController {
     //멤버 전체 조회 - memberId 로 관리자인가 확인
     @Operation(
             summary = "멤버 전체 조회"
-            , description = "멤버 전체를 조회하는 API. memberType이 관리자여야만 조회 가능함.")
+            , description = "멤버 전체를 조회하는 API. MemberType 이 관리자여야만 조회 가능함.")
     @GetMapping("/admin/{memberId}")
     public ResponseEntity<Page<Member>> getMemberList(
             @Validated MemberPageRequestDTO memberPageRequestDTO,
