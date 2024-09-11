@@ -84,7 +84,6 @@ public class MemberServiceImpl implements MemberService {
             member.changeEmail(memberUpdateDTO.getEmail());
             member.changePostcode(memberUpdateDTO.getPostcode());
             member.changeAddress(memberUpdateDTO.getAddress());
-            //member = memberUpdateDTO.toEntity();
 
             return new MemberResponseDTO(member);
         } catch (Exception e){

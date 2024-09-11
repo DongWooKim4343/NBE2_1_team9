@@ -9,6 +9,7 @@ import team9.gccoffee.domain.member.domain.MemberType;
 @NoArgsConstructor
 public class MemberResponseDTO { //response
 
+    private Long memberId;
     private String name;
     private String email;
     private String postcode;
@@ -16,8 +17,9 @@ public class MemberResponseDTO { //response
     private MemberType memberType;
 
 
-
     public MemberResponseDTO(Member member) {
+
+        this.memberId = member.getMemberId();
         this.name = member.getName();
         this.email = member.getEmail();
         this.postcode = member.getPostcode();
