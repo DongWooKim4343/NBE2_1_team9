@@ -2,14 +2,16 @@ package team9.gccoffee.domain.product.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import team9.gccoffee.domain.product.domain.Category;
 import team9.gccoffee.domain.product.domain.Product;
 
 @Data
 @NoArgsConstructor
-public class ProductRequest {
+public class ProductUpdateRequest {
+
+    @NotNull
+    private Long productId;
 
     @NotNull
     private Long memberId;
