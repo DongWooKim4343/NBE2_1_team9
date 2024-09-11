@@ -24,7 +24,8 @@ import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import team9.gccoffee.domain.member.service.MemberService;
 import team9.gccoffee.domain.order.domain.Order;
-import team9.gccoffee.global.exception.MemberException;
+import team9.gccoffee.global.exception.ErrorCode;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 @RestController
 @RequiredArgsConstructor
@@ -98,7 +99,7 @@ public class MemberController {
             @PathVariable("memberId") Long memberId ) {
 
         if( !memberId.equals(memberUpdateDTO.getId())) {
-            throw MemberException.NOT_MATCHED.get();
+            throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         return ResponseEntity.ok(memberService.updateMember(memberUpdateDTO));

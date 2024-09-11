@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import team9.gccoffee.global.common.BaseTimeEntity;
+import team9.gccoffee.global.exception.ErrorCode;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 @Entity
 @Getter
@@ -55,7 +57,7 @@ public class Product extends BaseTimeEntity {
         int restStock = this.stockQuantity - quantity;
 
         if (restStock < 0) {
-            throw new IllegalArgumentException("need more stock");
+            throw new GcCoffeeCustomException(ErrorCode.ORDER_QUANTITY_EXCEEDS_STOCK);
         }
         this.stockQuantity = restStock;
     }

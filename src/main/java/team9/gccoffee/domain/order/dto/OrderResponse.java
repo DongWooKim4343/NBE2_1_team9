@@ -26,7 +26,7 @@ public class OrderResponse {
     public OrderResponse(Order order) {
         Member member = order.getMember();
         email = member.getEmail();
-        postcode = member.getPostcode();
+        postcode = order.getPostcode();
         address = order.getAddress();
         orderItemResponses = getOrderItemResponse(order.getOrderItems());
         totalPrice = order.getTotalPrice();

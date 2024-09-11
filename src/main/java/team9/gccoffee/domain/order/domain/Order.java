@@ -11,8 +11,6 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 @Getter @ToString(exclude = {"orderItems", "member"})
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseTimeEntity {
 
@@ -34,7 +32,6 @@ public class Order extends BaseTimeEntity {
     private String address;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
     public void registerMember(Member member) {
@@ -64,6 +61,7 @@ public class Order extends BaseTimeEntity {
 
     public void cancel(){
         changeOrderStatus(OrderStatus.CANCELLED);
+
         for (OrderItem orderItem : orderItems) {
             orderItem.cancel();
         }
