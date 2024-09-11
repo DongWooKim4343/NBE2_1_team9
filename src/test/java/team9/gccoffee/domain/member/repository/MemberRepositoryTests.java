@@ -109,10 +109,7 @@ public class MemberRepositoryTests {
         Member member = foundMember.get();
 
         //주문 저장
-        Order order = Order.builder().member(member)
-                                        .postcode("~~")
-                                        .address("~~~~~")
-                                        .build();
+        Order order = Order.createOrder(member, null, "~~~~", "~~");
         orderRepository.save(order);
         member.getOrderList().add(order);
 
