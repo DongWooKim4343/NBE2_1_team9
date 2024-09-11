@@ -1,8 +1,7 @@
 package team9.gccoffee.domain.product.dto;
 
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 import team9.gccoffee.domain.product.domain.Category;
 import team9.gccoffee.domain.product.domain.Product;
 
@@ -10,15 +9,21 @@ import team9.gccoffee.domain.product.domain.Product;
 @NoArgsConstructor
 public class ProductRequest {
 
+
+    @NotEmpty(message = "이름은 필수 입력값입니다.")
     private String productName;
 
+    @NotEmpty(message = "카테고리는 필수 입력값입니다.")
+    private Category category;
+
+    @NotEmpty(message = "가격은 필수 입력값입니다.")
     private int price;
 
+    @NotEmpty(message = "설명은 필수 입력값입니다.")
     private String description;
 
+    @NotEmpty(message = "재고수량은 필수 입력값입니다.")
     private int stockQuantity;
-
-    private Category category;
 
     public Product toEntity() {
         return Product.builder().productName(productName)
@@ -27,7 +32,4 @@ public class ProductRequest {
                 .stockQuantity(stockQuantity)
                 .category(category).build();
     }
-
-
-
 }
