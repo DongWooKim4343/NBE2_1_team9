@@ -18,6 +18,9 @@ import team9.gccoffee.domain.member.repository.MemberRepository;
 import team9.gccoffee.global.exception.MemberException;
 import team9.gccoffee.global.exception.MemberTaskException;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -92,12 +95,14 @@ class MemberServiceImplTest {
                 .size(20)
                 .build();
 
-        //Long mId1 = saveMember1.getMemberId();    // 일반 멤버
-        Long mId2 = saveMember2.getMemberId();      // 관리자
+        Long mId1 = saveMember1.getMemberId();    // 일반 멤버
+        //Long mId2 = saveMember2.getMemberId();      // 관리자
+        //더미데이터 리스트에 추가
+        List<Member> memberList = Arrays.asList(saveMember1, saveMember2);
 
-        Page<Member> members = memberService.getAllMembers(requestDTO, mId2);
+        Page<Member> members = memberService.getAllMembers(requestDTO, mId1);
         assertThat(members).isNotNull();
-        assertThat(members.getTotalElements()).isEqualTo(2);
+        assertThat(members.getTotalElements()).isEqualTo(memberList.size());
     }
 
     @Test
