@@ -12,7 +12,6 @@ import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import team9.gccoffee.domain.member.repository.MemberRepository;
-import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.domain.product.domain.Product;
 import team9.gccoffee.domain.product.dto.ProductRequest;
 import team9.gccoffee.domain.product.dto.ProductUpdateRequest;
@@ -20,7 +19,6 @@ import team9.gccoffee.domain.product.dto.ProductResponse;
 import team9.gccoffee.domain.product.repository.ProductRepository;
 import team9.gccoffee.global.exception.ErrorCode;
 import team9.gccoffee.global.exception.GcCoffeeCustomException;
-import team9.gccoffee.global.exception.MemberException;
 
 @Service
 @RequiredArgsConstructor
