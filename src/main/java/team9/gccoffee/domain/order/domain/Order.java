@@ -37,8 +37,6 @@ public class Order extends BaseTimeEntity {
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    private int totalPrice;
-
     public void registerMember(Member member) {
         this.member = member;
     }
@@ -55,6 +53,22 @@ public class Order extends BaseTimeEntity {
         this.postcode = postcode;
     }
 
+    public int getTotalPrice(){
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getPrice() * orderItem.getQuantity();
+        }
+
+        return totalPrice;
+    }
+
+    public void cancel(){
+        changeOrderStatus(OrderStatus.CANCELLED);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+    }
+
     // 주문 생성 메서드
     public static Order createOrder(Member member, List<OrderItem> orderItems, String address, String postcode) {
         Order order = new Order();
@@ -66,7 +80,6 @@ public class Order extends BaseTimeEntity {
 
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
-            order.totalPrice += orderItem.calculateTotalPrice();
         }
 
         return order;
