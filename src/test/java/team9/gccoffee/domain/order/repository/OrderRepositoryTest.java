@@ -54,9 +54,10 @@ class OrderRepositoryTest {
         List<OrderItem> orderItems = createTestOrderItems(savedProduct, savedProduct2);
 
         String address = "서울시 종로구";
+        String postcode = "11111";
 
         // when
-        Order order = Order.createOrder(savedMember, orderItems, address);
+        Order order = Order.createOrder(savedMember, orderItems, address, postcode);
         Order savedOrder = orderRepository.save(order);
 
         // then
@@ -162,19 +163,8 @@ class OrderRepositoryTest {
 
     // 주문 아이템 생성 로직 분리
     private List<OrderItem> createTestOrderItems(Product product1, Product product2) {
-        OrderItem orderItem1 = OrderItem.builder()
-                .product(product1)
-                .category(product1.getCategory())
-                .price(product1.getPrice())
-                .quantity(2)
-                .build();
-
-        OrderItem orderItem2 = OrderItem.builder()
-                .product(product2)
-                .category(product2.getCategory())
-                .price(product2.getPrice())
-                .quantity(2)
-                .build();
+        OrderItem orderItem1 = OrderItem.createOrderItem(product1, 2);
+        OrderItem orderItem2 = OrderItem.createOrderItem(product2, 2);
 
         orderItemRepository.save(orderItem1);
         orderItemRepository.save(orderItem2);

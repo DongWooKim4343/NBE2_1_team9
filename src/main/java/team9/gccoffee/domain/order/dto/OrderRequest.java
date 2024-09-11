@@ -1,19 +1,25 @@
 package team9.gccoffee.domain.order.dto;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import team9.gccoffee.domain.order.domain.OrderItem;
 
 @Getter
 @ToString
 @AllArgsConstructor
 public class OrderRequest {
 
+    @NotNull
     private Long memberId;
 
-    private List<OrderItem> orderItems;
+    @NotNull
+    private List<OrderItemRequest> orderItems;
 
+    @NotNull
+    private String postcode;
+
+    @NotNull
     private String address;
 }

@@ -28,6 +28,9 @@ public class Order extends BaseTimeEntity {
     private OrderStatus orderStatus;
 
     @Column(nullable = false)
+    private String postcode;
+
+    @Column(nullable = false)
     private String address;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -48,10 +51,15 @@ public class Order extends BaseTimeEntity {
         this.address = address;
     }
 
+    public void changePostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
     // 주문 생성 메서드
-    public static Order createOrder(Member member, List<OrderItem> orderItems, String address) {
+    public static Order createOrder(Member member, List<OrderItem> orderItems, String address, String postcode) {
         Order order = new Order();
 
+        order.postcode = postcode;
         order.address = address;
         order.orderStatus = OrderStatus.CREATED;
         order.registerMember(member);

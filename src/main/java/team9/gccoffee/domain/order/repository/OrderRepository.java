@@ -9,7 +9,6 @@ import team9.gccoffee.domain.order.dto.OrderResponse;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @Query("SELECT o FROM Order o "
-            + "WHERE o.orderId = :orderId")
+    @Query("SELECT o FROM Order o WHERE o.orderId = :orderId")
     Optional<OrderResponse> getOrderResponse(@Param("orderId") Long orderId);
 }
