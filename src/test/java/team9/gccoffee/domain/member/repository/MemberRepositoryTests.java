@@ -1,5 +1,6 @@
 package team9.gccoffee.domain.member.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,6 +23,7 @@ import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.member.repository.MemberRepository;
 import team9.gccoffee.domain.order.domain.Order;
+import team9.gccoffee.domain.order.repository.OrderRepository;
 import team9.gccoffee.global.exception.MemberException;
 
 @SpringBootTest
@@ -30,6 +32,8 @@ public class MemberRepositoryTests {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     //등록
     @Test
@@ -99,14 +103,22 @@ public class MemberRepositoryTests {
     public void testFetchOrders() {
         Long memberId = 3L;
 
-        Optional<Member> foundMember = memberRepository.findById(memberId);
+        Optional<Member> foundMember = memberRepository.findByIdWithOrders(memberId);
         assertTrue(foundMember.isPresent());
 
         Member member = foundMember.get();
-        List<Order> orders = member.getOrderList();
 
+        //주문 저장
+        Order order = Order.builder().member(member)
+                                        .postcode("~~")
+                                        .address("~~~~~")
+                                        .build();
+        orderRepository.save(order);
+        member.getOrderList().add(order);
+
+        List<Order> orders = member.getOrderList();
         //무엇으로 확인? 지정한 memberId 값과 orders 0번에 있는 member 값 같은지 비교
-        assertEquals(memberId, orders.get(0).getOrderId());
+        assertThat(orders.get(0).getMember().getMemberId()).isEqualTo(memberId);
     }
 
 
@@ -137,6 +149,7 @@ public class MemberRepositoryTests {
         //then
         //CHANGE 되어있는지 확인
         assertEquals("changed@bbb.com", foundMember.get().getEmail());
+        assertThat(foundMember.get().getEmail()).isEqualTo("changed@bbb.com");
 
     }
 
@@ -153,7 +166,6 @@ public class MemberRepositoryTests {
 
         //then
         assertFalse(memberRepository.findById(memberId).isPresent());
-
 
     }
 
