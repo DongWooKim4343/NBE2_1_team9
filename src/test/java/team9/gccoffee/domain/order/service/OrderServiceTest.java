@@ -28,6 +28,7 @@ import team9.gccoffee.domain.order.repository.OrderRepository;
 import team9.gccoffee.domain.product.domain.Category;
 import team9.gccoffee.domain.product.domain.Product;
 import team9.gccoffee.domain.product.repository.ProductRepository;
+import team9.gccoffee.global.exception.order.OrderTaskException;
 
 @SpringBootTest
 @Slf4j
@@ -83,7 +84,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("Order 를 생성할 때, 주문 수량이 상품의 재고보다 많다면 IllegalException 이 발생한다.")
+    @DisplayName("Order 를 생성할 때, 주문 수량이 상품의 재고보다 많다면 OrderTaskException 이 발생한다.")
     void createOrderProductStockOverExceptionTest() {
         // given
         List<OrderItemRequest> orderItemRequests = new ArrayList<>();
@@ -98,8 +99,8 @@ class OrderServiceTest {
 
         // then
         assertThatThrownBy(() -> orderService.createOrder(orderRequest))
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("need more stock");
+                .isExactlyInstanceOf(OrderTaskException.class)
+                .hasMessage("Order quantity is over than product stock");
     }
 
     @Test

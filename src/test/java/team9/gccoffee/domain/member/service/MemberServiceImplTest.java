@@ -2,7 +2,6 @@ package team9.gccoffee.domain.member.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,7 @@ import team9.gccoffee.domain.member.dto.MemberRequestDTO;
 import team9.gccoffee.domain.member.dto.MemberResponseDTO;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 import team9.gccoffee.domain.member.repository.MemberRepository;
-import team9.gccoffee.global.exception.MemberException;
-import team9.gccoffee.global.exception.MemberTaskException;
+import team9.gccoffee.global.exception.member.MemberTaskException;
 
 import java.util.Arrays;
 import java.util.List;

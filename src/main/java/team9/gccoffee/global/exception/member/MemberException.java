@@ -1,4 +1,4 @@
-package team9.gccoffee.global.exception;
+package team9.gccoffee.global.exception.member;
 
 public enum MemberException {
     ACCESS_DENIED("ACCESS_DENIED", 403),
@@ -20,5 +20,4 @@ public enum MemberException {
     public MemberTaskException get() {
         return memberTaskException;
     }
-
 }

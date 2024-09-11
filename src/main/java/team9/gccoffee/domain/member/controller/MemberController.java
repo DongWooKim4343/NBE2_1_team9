@@ -24,7 +24,7 @@ import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import team9.gccoffee.domain.member.service.MemberService;
 import team9.gccoffee.domain.order.domain.Order;
-import team9.gccoffee.global.exception.MemberException;
+import team9.gccoffee.global.exception.member.MemberException;
 
 @RestController
 @RequiredArgsConstructor

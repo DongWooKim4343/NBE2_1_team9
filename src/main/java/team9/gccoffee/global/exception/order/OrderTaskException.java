@@ -1,11 +1,12 @@
-package team9.gccoffee.global.exception;
+package team9.gccoffee.global.exception.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MemberTaskException extends RuntimeException {
+public class OrderTaskException extends RuntimeException {
+
     private String message;
     private int code;
 }

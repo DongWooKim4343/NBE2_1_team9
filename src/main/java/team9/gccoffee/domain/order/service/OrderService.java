@@ -20,7 +20,9 @@ import team9.gccoffee.domain.order.repository.OrderItemRepository;
 import team9.gccoffee.domain.order.repository.OrderRepository;
 import team9.gccoffee.domain.product.domain.Product;
 import team9.gccoffee.domain.product.repository.ProductRepository;
-import team9.gccoffee.global.exception.MemberException;
+import team9.gccoffee.global.exception.member.MemberException;
+import team9.gccoffee.global.exception.order.OrderException;
+import team9.gccoffee.global.exception.product.ProductException;
 
 @Controller
 @RequiredArgsConstructor
@@ -69,13 +71,13 @@ public class OrderService {
 
     private Product validateProduct(OrderItemRequest orderItemRequest) {
         Product product = productRepository.findById(orderItemRequest.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                .orElseThrow(ProductException.NOT_FOUND::get);
 
         product.removeStock(orderItemRequest.getQuantity());
 
         if (!orderItemRequest.getCategory().equals(product.getCategory())
                 || orderItemRequest.getPrice() != product.getPrice()) {
-            throw new IllegalArgumentException("Product validation failed");
+            throw ProductException.BAD_REQUEST.get();
         }
 
         return product;
@@ -83,14 +85,14 @@ public class OrderService {
 
     public OrderResponse getOrderResponse(Long orderId) {
         return orderRepository.getOrderResponse(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(OrderException.ORDER_NOT_FOUND::get);
     }
 
     public List<OrderResponse> getOrderResponses() {
         List<OrderResponse> orderResponseList = orderRepository.getOrderResponseList();
 
         if (orderResponseList.isEmpty()) {
-            throw new IllegalArgumentException("There's no order");
+            throw OrderException.ORDER_NOT_FOUND.get();
         }
 
         return orderResponseList;
@@ -98,7 +100,7 @@ public class OrderService {
 
     public OrderResponse updateOrder(Long orderId, OrderUpdateRequest orderUpdateRequest) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(OrderException.ORDER_NOT_FOUND::get);
 
         order.changeAddress(orderUpdateRequest.getAddress());
         order.changePostcode(orderUpdateRequest.getPostcode());
@@ -108,11 +110,11 @@ public class OrderService {
 
     public void completeOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(OrderException.ORDER_NOT_FOUND::get);
 
         if (order.getOrderStatus().equals(OrderStatus.CANCELLED) || order.getOrderStatus()
                 .equals(OrderStatus.COMPLETED)) {
-            throw new IllegalStateException("Order is completed or canceled Error");
+            throw OrderException.ORDER_CLOSED.get();
         }
 
         order.changeOrderStatus(OrderStatus.COMPLETED);
@@ -120,10 +122,10 @@ public class OrderService {
 
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(OrderException.ORDER_NOT_FOUND::get);
 
         if (order.getOrderStatus().equals(OrderStatus.COMPLETED)) {
-            throw new IllegalStateException("Order is completed");
+            throw OrderException.ORDER_COMPLETED.get();
         }
 
         order.cancel();
@@ -131,10 +133,10 @@ public class OrderService {
 
     public void deleteOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(OrderException.ORDER_NOT_FOUND::get);
 
         if (!order.getOrderStatus().equals(OrderStatus.CANCELLED)){
-            throw new IllegalStateException("Order is not canceled");
+            throw OrderException.ORDER_NOT_CANCELED.get();
         }
 
         orderRepository.delete(order);
@@ -142,14 +144,14 @@ public class OrderService {
 
     public OrderItemResponse getOrderItem(Long orderItemId) {
         OrderItemResponse orderItemResponse = orderItemRepository.getOrderItemResponse(orderItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Order item not found"));
+                .orElseThrow(OrderException.ORDER_ITEM_NOT_FOUND::get);
 
         return orderItemResponse;
     }
 
     public OrderItemResponse updateOrderItem(Long orderItemId, OrderItemUpdateDTO orderItemUpdateDTO) {
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                .orElseThrow(OrderException.ORDER_ITEM_NOT_FOUND::get);
 
         orderItem.changeQuantity(orderItemUpdateDTO.getQuantity());
 

@@ -21,10 +21,9 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
-import team9.gccoffee.domain.member.repository.MemberRepository;
 import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.domain.order.repository.OrderRepository;
-import team9.gccoffee.global.exception.MemberException;
+import team9.gccoffee.global.exception.member.MemberException;
 
 @SpringBootTest
 @Log4j2

@@ -18,8 +18,7 @@ import team9.gccoffee.domain.member.repository.MemberRepository;
 
 import java.util.Optional;
 import team9.gccoffee.domain.order.domain.Order;
-import team9.gccoffee.global.exception.MemberException;
-import team9.gccoffee.global.exception.MemberTaskException;
+import team9.gccoffee.global.exception.member.MemberException;
 
 @Service
 @RequiredArgsConstructor
