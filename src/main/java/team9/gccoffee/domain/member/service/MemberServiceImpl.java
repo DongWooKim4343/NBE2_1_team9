@@ -114,7 +114,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO) {
         if (memberRequestDTO.getMemberType() == MemberType.ADMIN) {
             if (!"ADMIN000".equals(memberRequestDTO.getAdminCode())) {
-                throw new SecurityException("Invalid admin code!!");
+                throw MemberException.NOT_VALID.get();
             }
         }
         try {

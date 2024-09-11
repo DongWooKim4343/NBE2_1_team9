@@ -53,7 +53,7 @@ public class MemberController {
 
 
     //멤버 전체 조회 - memberId 로 관리자인가 확인
-    @GetMapping("/list/{memberId}")
+    @GetMapping("/admin/{memberId}")
     public ResponseEntity<Page<Member>> getMemberList(
             @Validated MemberPageRequestDTO memberPageRequestDTO,
             @PathVariable("memberId") Long memberId) {
