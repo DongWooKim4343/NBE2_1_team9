@@ -35,7 +35,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public  MemberResponseDTO getMemberById(Long memberId) {
         Optional<Member> foundMember = memberRepository.findById(memberId);
-
         Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return new MemberResponseDTO(member);

@@ -12,11 +12,14 @@ import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import team9.gccoffee.domain.member.repository.MemberRepository;
+import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.domain.product.domain.Product;
 import team9.gccoffee.domain.product.dto.ProductRequest;
 import team9.gccoffee.domain.product.dto.ProductUpdateRequest;
 import team9.gccoffee.domain.product.dto.ProductResponse;
 import team9.gccoffee.domain.product.repository.ProductRepository;
+import team9.gccoffee.global.exception.ErrorCode;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 import team9.gccoffee.global.exception.MemberException;
 
 @Service
@@ -33,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductById(Long productId) {
         Optional<Product> foundProduct = productRepository.findById(productId);
 
-        Product product = foundProduct.orElseThrow(MemberException.NOT_FOUND::get);
+        Product product = foundProduct.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         return new ProductResponse(product);
     }
@@ -50,21 +53,20 @@ public class ProductServiceImpl implements ProductService {
 
     // 상품 등록 //관리자만 가능
     @Override
-    public ProductResponse createProduct(ProductRequest productrequest) {
-        Optional<Member> foundMember = memberRepository.findById(productrequest.getMemberId());
-        Member member = foundMember.orElseThrow(MemberException.NOT_FOUND::get);
+    public ProductResponse createProduct(ProductRequest productRequest) {
+        Optional<Member> foundMember = memberRepository.findById(productRequest.getMemberId());
+        Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         if (member.getMemberType() == MemberType.ADMIN) {
-            throw MemberException.ACCESS_DENIED.get();
+            throw new GcCoffeeCustomException(ErrorCode.PRODUCT_BAD_REQUEST);
         }
 
         try {
-            Product product = productrequest.toEntity();
+            Product product = productRequest.toEntity();
             productRepository.save(product);
             return new ProductResponse(product);
         } catch (Exception e) {
-
-            throw MemberException.NOT_REGISTERED.get();
+            throw new GcCoffeeCustomException(ErrorCode.PRODUCT_NOT_REGISTERED);
         }
     }
 
@@ -72,13 +74,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse updateProduct(ProductUpdateRequest productUpdateRequest) {
         Product product = productRepository.findById(productUpdateRequest.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        Member member = memberRepository.findById(productUpdateRequest.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        Optional<Member> foundMember = memberRepository.findById(productUpdateRequest.getMemberId());
+        Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if (member.getMemberType() == MemberType.ADMIN) {
-            throw MemberException.ACCESS_DENIED.get();
+
+        if (member.getMemberType() == MemberType.CUSTOMER) {
+            throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_VALID);
         }
 
         try {
@@ -90,8 +93,7 @@ public class ProductServiceImpl implements ProductService {
 
             return new ProductResponse(product);
         } catch (Exception e){
-
-            throw MemberException.NOT_MODIFIED.get();
+            throw new GcCoffeeCustomException(ErrorCode.PRODUCT_NOT_MODIFIED);
         }
     }
 
@@ -99,12 +101,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         try {
             productRepository.delete(product);
         } catch (Exception e) {
-            throw new IllegalStateException("Product is not deleted");
+            throw new GcCoffeeCustomException(ErrorCode.PRODUCT_NOT_REMOVED);
         }
     }
 }
