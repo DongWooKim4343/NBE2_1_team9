@@ -12,19 +12,13 @@ import team9.gccoffee.domain.product.repository.ProductRepository;
 
 @Controller
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductViewController {
 
     private final ProductRepository productRepository;
 
-    //수정 안됨
-    @PostMapping("/api/v1/product")
-    String addproducts(Model model) {
-
-        return "redirect:/list";
-    }
 
     //완료됨
-    @GetMapping("/api/v1/product")
+    @GetMapping("/product")
     String viewproduts(Model model) {
         List<Product> result = productRepository.findAll();
         model.addAttribute("items", result);
@@ -32,13 +26,13 @@ public class ProductController {
     }
 
     //수정중
-    @GetMapping("/api/v1/product/{id}")
+    @GetMapping("/product/{id}")
     String viewproduct(@PathVariable("id") Long id, Model model) {
-        Optional<Product> result = productRepository.findByproductId(id);
-        System.out.println(id);
-        System.out.println(result.get());
-//        model.addAttribute("items", result);
+        Optional<Product> result = productRepository.findByProductId(id);
+        model.addAttribute("items", result.get());
 
         return "listeach";
     }
+
+
 }

@@ -13,6 +13,7 @@
     <title>Products</title>
 </head>
 <body>
+    <h4 class="main-text">List Page</h4>
     <div class="list-container" th:each="i : ${items}">
         <img src="https://placehold.co/300">
         <div class="text">
@@ -20,7 +21,7 @@
             <h4 th:text="${i.price}">상품 가격</h4>
         </div>
         <div class="text">
-            <h4>✏️</h4>
+            <a th:href="'product/'+${i.productId}">✏️</a>
             <h4>🗑️️</h4>
         </div>
     </div>
