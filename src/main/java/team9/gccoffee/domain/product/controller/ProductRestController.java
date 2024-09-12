@@ -21,7 +21,8 @@ import team9.gccoffee.domain.product.dto.ProductRequest;
 import team9.gccoffee.domain.product.dto.ProductUpdateRequest;
 import team9.gccoffee.domain.product.dto.ProductResponse;
 import team9.gccoffee.domain.product.service.ProductService;
-import team9.gccoffee.global.exception.MemberException;
+import team9.gccoffee.global.exception.ErrorCode;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 
 @RestController
@@ -82,7 +83,7 @@ public class ProductRestController {
             @PathVariable("productId") Long productId ) {
 
         if( !productId.equals(productUpdateRequest.getProductId())) {
-            throw MemberException.NOT_MATCHED.get();
+            throw new GcCoffeeCustomException(ErrorCode.PRODUCT_NOT_FOUND);
         }
 
         return ResponseEntity.ok(productService.updateProduct(productUpdateRequest));

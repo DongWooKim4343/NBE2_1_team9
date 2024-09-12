@@ -13,7 +13,6 @@ import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import java.util.Optional;
 import team9.gccoffee.domain.order.domain.Order;
 
-@Service
 
 public interface MemberService {
     public MemberResponseDTO getMemberById(Long memberId); //멤버 개별 조회
