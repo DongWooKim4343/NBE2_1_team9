@@ -17,6 +17,7 @@ public enum ErrorCode {
     MEMBER_NOT_REGISTERED(CONFLICT, "회원 등록에 실패했습니다."),
     MEMBER_NOT_MODIFIED(CONFLICT, "회원 정보 수정에 실패했습니다."),
     MEMBER_NOT_VALID(BAD_REQUEST, "유효하지 않은 관리자 코드입니다."),
+    MEMBER_NOT_ADMIN(BAD_REQUEST, "관리자 권한이 필요합니다."),
 
     // Product
     PRODUCT_NOT_FOUND(NOT_FOUND, "상품 정보를 찾을 수 없습니다."),
