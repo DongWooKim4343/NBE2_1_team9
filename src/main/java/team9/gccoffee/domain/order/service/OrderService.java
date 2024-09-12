@@ -85,11 +85,13 @@ public class OrderService {
         return product;
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse getOrderResponse(Long orderId) {
         return orderRepository.getOrderResponse(orderId)
                 .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.ORDER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> getOrderResponses(OrderPageRequest orderPageRequest) {
         Sort sort = Sort.by("orderId").ascending();
         Pageable pageAble = orderPageRequest.getPageAble(sort);
@@ -103,6 +105,7 @@ public class OrderService {
         return orderResponseList;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> getMyOrders(Long memberId, OrderPageRequest orderPageRequest) {
         memberRepository.findById(memberId).orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
@@ -162,6 +165,7 @@ public class OrderService {
         orderRepository.delete(order);
     }
 
+    @Transactional(readOnly = true)
     public OrderItemResponse getOrderItem(Long orderItemId) {
         return orderItemRepository.getOrderItemResponse(orderItemId)
                 .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.ORDER_ITEM_NOT_FOUND));

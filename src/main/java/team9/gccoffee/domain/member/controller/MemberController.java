@@ -1,10 +1,10 @@
 package team9.gccoffee.domain.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
 import team9.gccoffee.domain.member.dto.MemberRequestDTO;
 import team9.gccoffee.domain.member.dto.MemberResponseDTO;
@@ -39,11 +38,11 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<MemberResponseDTO> register(
             @Validated @RequestBody MemberRequestDTO memberRequestDTO) {
+        MemberResponseDTO memberResponseDTO = memberService.createMember(memberRequestDTO);
 
-        return ResponseEntity.ok(memberService.createMember(memberRequestDTO));
+        return ResponseEntity.ok(memberResponseDTO);
     }
 
-    //조회
     //memberId 로 멤버 개별 조회
     @Operation(
             summary = "멤버 조회"
@@ -52,7 +51,9 @@ public class MemberController {
     public ResponseEntity<MemberResponseDTO> read(
             @PathVariable("memberId") Long memberId) {
 
-        return ResponseEntity.ok(memberService.getMemberById(memberId));
+        MemberResponseDTO memberResponseDTO = memberService.getMemberById(memberId);
+
+        return ResponseEntity.ok(memberResponseDTO);
     }
 
     //멤버 전체 조회 - memberId 로 관리자인가 확인
@@ -60,11 +61,12 @@ public class MemberController {
             summary = "멤버 전체 조회"
             , description = "멤버 전체를 조회하는 API. MemberType 이 관리자여야만 조회 가능함.")
     @GetMapping("/admin/{memberId}")
-    public ResponseEntity<Page<Member>> getMemberList(
+    public ResponseEntity<List<MemberResponseDTO>> getMemberList(
             @Validated MemberPageRequestDTO memberPageRequestDTO,
             @PathVariable("memberId") Long memberId) {
+        List<MemberResponseDTO> members = memberService.getAllMembers(memberPageRequestDTO, memberId);
 
-        return ResponseEntity.ok(memberService.getAllMembers(memberPageRequestDTO, memberId));
+        return ResponseEntity.ok(members);
     }
 
     //수정 memberId
@@ -79,7 +81,9 @@ public class MemberController {
         if (!memberId.equals(memberUpdateDTO.getId())) {
             throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
-        return ResponseEntity.ok(memberService.updateMember(memberUpdateDTO));
+        MemberResponseDTO memberResponseDTO = memberService.updateMember(memberUpdateDTO);
+
+        return ResponseEntity.ok(memberResponseDTO);
     }
 
     //삭제 memberId
