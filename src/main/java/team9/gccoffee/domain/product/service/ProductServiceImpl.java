@@ -55,8 +55,8 @@ public class ProductServiceImpl implements ProductService {
         Optional<Member> foundMember = memberRepository.findById(productRequest.getMemberId());
         Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        if (member.getMemberType() == MemberType.ADMIN) {
-            throw new GcCoffeeCustomException(ErrorCode.PRODUCT_BAD_REQUEST);
+        if (member.getMemberType() == MemberType.CUSTOMER) {
+            throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_ADMIN);
         }
 
         try {

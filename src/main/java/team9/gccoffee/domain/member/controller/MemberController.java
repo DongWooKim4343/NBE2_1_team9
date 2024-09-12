@@ -70,7 +70,7 @@ public class MemberController {
     //수정 memberId
     @Operation(
             summary = "멤버 수정"
-            , description = "멤버의 주문 내역을 조회하는 API, memberId로 수정")
+            , description = "멤버의 정보를 수정하는 API, memberId로 수정")
     @PutMapping("/{memberId}")
     public ResponseEntity<MemberResponseDTO> modify(
             @Validated @RequestBody MemberUpdateDTO memberUpdateDTO,

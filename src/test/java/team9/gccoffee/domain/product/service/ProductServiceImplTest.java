@@ -10,15 +10,20 @@ import org.springframework.data.domain.Page;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 import team9.gccoffee.domain.member.dto.MemberPageRequestDTO;
+import team9.gccoffee.domain.member.repository.MemberRepository;
 import team9.gccoffee.domain.product.domain.Category;
 import team9.gccoffee.domain.product.domain.Product;
+import team9.gccoffee.domain.product.dto.ProductRequest;
 import team9.gccoffee.domain.product.dto.ProductResponse;
 import team9.gccoffee.domain.product.repository.ProductRepository;
+import team9.gccoffee.global.exception.ErrorCode;
+import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Slf4j
@@ -27,11 +32,17 @@ class ProductServiceImplTest {
     private ProductRepository productRepository;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private MemberRepository memberRepository;
 
     Product product1;
     Product product2;
     Product saveProduct1;
     Product saveProduct2;
+    Member customer;
+    Member admin;
+    Member saveMember1;
+    Member saveMember2;
 
     @BeforeEach
         //더미데이터 만들고 시작
@@ -54,16 +65,36 @@ class ProductServiceImplTest {
                 .stockQuantity(10000)
                 .build();
 
+        // CUSTOMER멤버, ADMIN멤버 생성
+        customer = Member.builder()
+                .memberId(1L)
+                .memberType(MemberType.CUSTOMER)
+                .address("NOT NULL")
+                .email("NOT NULL")
+                .postcode("NOT NULL")
+                .name("NOT NULL")
+                .build();
+        admin = Member.builder()
+                .memberId(2L)
+                .memberType(MemberType.ADMIN)
+                .address("NOT NULL")
+                .email("NOT NULL")
+                .postcode("NOT NULL")
+                .name("NOT NULL")
+                .build();
 
 
         //더미데이터 DB에 저장하는 코드
         saveProduct1 = productRepository.save(product1);
         saveProduct2 = productRepository.save(product2);
+        saveMember1 = memberRepository.save(customer);
+        saveMember2 = memberRepository.save(admin);
     }
 
     @AfterEach
     void clear() {
         productRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -108,6 +139,42 @@ class ProductServiceImplTest {
 
     @Test
     void createProduct() {
+        ProductRequest requestDTO = new ProductRequest();
+        ProductRequest requestDTO2 = new ProductRequest();
+        //고객이 신규상품 5000원짜리를 100개 등록시도
+        requestDTO.setMemberId(customer.getMemberId());
+        requestDTO.setProductName("신규상품");
+        requestDTO.setDescription("신규상품에 관한 설명");
+        requestDTO.setCategory(Category.COFFEE1);
+        requestDTO.setPrice(5000);
+        requestDTO.setStockQuantity(100);
+
+        //관리자가 다른상품 등록시도
+        requestDTO2.setMemberId(admin.getMemberId());
+        requestDTO2.setProductName("다른상품");
+        requestDTO2.setDescription("또 다른 상품에 관한 설명");
+        requestDTO2.setCategory(Category.COFFEE2);
+        requestDTO2.setPrice(12345);
+        requestDTO2.setStockQuantity(11200);
+
+        // 고객이 상품 등록 시도 -> 예외 발생
+        assertThatThrownBy(() -> productService.createProduct(requestDTO))
+                .isInstanceOf(GcCoffeeCustomException.class)
+                .hasMessageContaining(ErrorCode.MEMBER_NOT_ADMIN.getMessage());
+        //관리자가 등록시도
+        ProductResponse createProduct2 = productService.createProduct(requestDTO2);
+        //DB에 들어있나 확인
+        Product productDB2 = productRepository.findByProductName(createProduct2.getProductName());
+
+        //테스트
+        assertThat(productDB2).isNotNull();
+        assertThat(productDB2.getCategory()).isEqualTo(Category.COFFEE2);
+        assertThat(productDB2.getStockQuantity()).isEqualTo(createProduct2.getStockQuantity());
+        assertThat(productDB2.getDescription()).isEqualTo(createProduct2.getDescription());
+        assertThat(productDB2.getPrice()).isEqualTo(createProduct2.getPrice());
+
+
+
     }
 
     @Test
