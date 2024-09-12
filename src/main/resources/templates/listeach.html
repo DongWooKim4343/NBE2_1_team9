@@ -18,9 +18,23 @@
             <h4 th:text="${items.price}">상품 가격</h4>
             <input th:value="${items.productName}">
             <input th:value="${items.price}">
-            <button>수정하기</button>
+            <button id="btn">수정하기</button>
         </div>
     </div>
 
 </body>
+
+<script>
+    document.querySelectorAll("#btn")[0].addEventListener("click", function (){
+        $.ajax({
+            url: 'api/v1/products',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                key1 : "value1",
+                key2 :
+            })
+        })
+    })
+</script>
 </html>
