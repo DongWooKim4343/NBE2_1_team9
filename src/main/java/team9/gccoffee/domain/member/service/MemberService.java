@@ -9,7 +9,6 @@ import team9.gccoffee.domain.member.dto.MemberResponseDTO;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 
 @Service
-
 public interface MemberService {
     MemberResponseDTO getMemberById(Long memberId); //멤버 개별 조회
     Page<Member> getAllMembers(MemberPageRequestDTO memberPageRequestDTO, Long memberId); // 관리자 전체 멤버 조회
