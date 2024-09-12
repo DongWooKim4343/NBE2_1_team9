@@ -17,6 +17,10 @@ public class ProductViewController {
     private final ProductRepository productRepository;
 
 
+
+
+
+
     //완료됨
     @GetMapping("/product")
     String viewproduts(Model model) {
@@ -30,9 +34,6 @@ public class ProductViewController {
     String viewproduct(@PathVariable("id") Long id, Model model) {
         Optional<Product> result = productRepository.findByProductId(id);
         model.addAttribute("items", result.get());
-
         return "listeach";
     }
-
-
 }
