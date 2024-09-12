@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
 
 
         if (member.getMemberType() == MemberType.CUSTOMER) {
-            throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_VALID);
+            throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_ADMIN);
         }
 
         try {
