@@ -36,9 +36,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Order> orderList = new ArrayList<>();
+//    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<Order> orderList = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
     private MemberType memberType;
