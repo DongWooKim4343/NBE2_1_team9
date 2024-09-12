@@ -129,6 +129,7 @@ class MemberServiceImplTest {
     void createMember() {
         MemberRequestDTO requestDTO = new MemberRequestDTO();
         MemberRequestDTO requestDTO2 = new MemberRequestDTO();
+
         requestDTO.setAddress("신규생성");
         requestDTO.setName("신규멤버");
         requestDTO.setEmail("신규@email.com");
