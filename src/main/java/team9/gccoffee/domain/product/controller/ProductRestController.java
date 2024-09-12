@@ -84,6 +84,7 @@ public class ProductRestController {
 
         if( !productId.equals(productUpdateRequest.getProductId())) {
             throw new GcCoffeeCustomException(ErrorCode.PRODUCT_BAD_REQUEST);
+
         }
 
         return ResponseEntity.ok(productService.updateProduct(productUpdateRequest));

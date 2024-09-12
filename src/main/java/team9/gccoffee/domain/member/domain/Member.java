@@ -50,5 +50,4 @@ public class Member extends BaseTimeEntity {
     public void changePostcode(String postcode) { this.postcode = postcode; }
 
     public void changeAddress(String address) { this.address = address; }
-
 }
