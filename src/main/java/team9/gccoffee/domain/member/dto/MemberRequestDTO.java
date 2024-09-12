@@ -35,7 +35,6 @@ public class MemberRequestDTO { //등록 시 사용
 
     private String adminCode;
 
-
     public Member toEntity() {
         return Member.builder().name(name)
                 .email(email)
@@ -44,7 +43,4 @@ public class MemberRequestDTO { //등록 시 사용
                 .memberType(memberType)
                 .build();
     }
-
-
-
 }
