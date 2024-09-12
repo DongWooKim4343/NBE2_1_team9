@@ -21,6 +21,9 @@ public enum ErrorCode {
     // Product
     PRODUCT_NOT_FOUND(NOT_FOUND, "상품 정보를 찾을 수 없습니다."),
     PRODUCT_BAD_REQUEST(BAD_REQUEST, "상품 요청이 잘못되었습니다."),
+    PRODUCT_NOT_REMOVED(CONFLICT, "상품 삭제에 실패했습니다."),
+    PRODUCT_NOT_REGISTERED(CONFLICT, "상품 등록에 실패했습니다."),
+    PRODUCT_NOT_MODIFIED(CONFLICT, "상품 수정에 실패했습니다."),
 
     // Order
     ORDER_NOT_FOUND(NOT_FOUND, "주문 정보를 찾을 수 없습니다."),
