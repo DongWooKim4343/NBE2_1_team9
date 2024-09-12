@@ -20,6 +20,7 @@ import team9.gccoffee.domain.order.domain.Order;
 import team9.gccoffee.domain.order.domain.OrderItem;
 import team9.gccoffee.domain.order.domain.OrderStatus;
 import team9.gccoffee.domain.order.dto.OrderItemRequest;
+import team9.gccoffee.domain.order.dto.OrderPageRequest;
 import team9.gccoffee.domain.order.dto.OrderRequest;
 import team9.gccoffee.domain.order.dto.OrderResponse;
 import team9.gccoffee.domain.order.dto.OrderUpdateRequest;
@@ -107,7 +108,7 @@ class OrderServiceTest {
     @DisplayName("모든 주문 조회를 할 수 있어야 한다.")
     void getOrderListExceptionTest() {
         // when
-        List<OrderResponse> orderResponses = orderService.getOrderResponses();
+        List<OrderResponse> orderResponses = orderService.getOrderResponses(new OrderPageRequest());
 
         // then
         assertThat(orderResponses.isEmpty()).isFalse();
