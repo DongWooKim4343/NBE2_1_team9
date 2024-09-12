@@ -15,14 +15,4 @@ public class MemberUpdateDTO { //request
     private String email;
     private String postcode;
     private String address;
-
-
-    public Member toEntity() {
-        return Member.builder().name(name)
-                .email(email)
-                .postcode(postcode)
-                .address(address)
-                .build();
-    }
-
 }
