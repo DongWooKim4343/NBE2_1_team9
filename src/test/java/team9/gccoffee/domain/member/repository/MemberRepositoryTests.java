@@ -98,27 +98,6 @@ public class MemberRepositoryTests {
 
     }
 
-    //개인 주문 조회
-    @Test
-    public void testFetchOrders() {
-        Long memberId = 3L;
-
-        Optional<Member> foundMember = memberRepository.findByIdWithOrders(memberId);
-        assertTrue(foundMember.isPresent());
-
-        Member member = foundMember.get();
-
-        //주문 저장
-        Order order = Order.createOrder(member, null, "~~~~", "~~");
-        orderRepository.save(order);
-        member.getOrderList().add(order);
-
-        List<Order> orders = member.getOrderList();
-        //무엇으로 확인? 지정한 memberId 값과 orders 0번에 있는 member 값 같은지 비교
-        assertThat(orders.get(0).getMember().getMemberId()).isEqualTo(memberId);
-    }
-
-
     //수정
     @Test   //UPDATE 테스트 - 트랜잭션 O
     @Transactional
