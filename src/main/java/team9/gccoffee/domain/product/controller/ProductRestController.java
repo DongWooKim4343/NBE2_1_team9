@@ -83,7 +83,8 @@ public class ProductRestController {
             @PathVariable("productId") Long productId ) {
 
         if( !productId.equals(productUpdateRequest.getProductId())) {
-            throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_MATCHED);
+            throw new GcCoffeeCustomException(ErrorCode.PRODUCT_BAD_REQUEST);
+
         }
 
         return ResponseEntity.ok(productService.updateProduct(productUpdateRequest));

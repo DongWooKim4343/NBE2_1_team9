@@ -9,7 +9,4 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
-
-    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.orderList WHERE m.memberId = :memberId")
-    Optional<Member> findByIdWithOrders(@Param("memberId") Long memberId);
 }
