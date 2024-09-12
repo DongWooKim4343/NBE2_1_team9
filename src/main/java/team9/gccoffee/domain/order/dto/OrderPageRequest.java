@@ -1,4 +1,4 @@
-package team9.gccoffee.domain.member.dto;
+package team9.gccoffee.domain.order.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -8,16 +8,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 @Getter
-public class MemberPageRequestDTO {
+public class OrderPageRequest {
 
     @Min(1)
     private int page = 1;
 
-    @Min(20)
+    @Min(10)
     @Max(100)
-    private int size = 20;
+    private int size = 10;
 
-    public Pageable getPageable(Sort sort) {
+    public Pageable getPageAble(Sort sort) {
         return PageRequest.of(page - 1, size, sort);
     }
 }

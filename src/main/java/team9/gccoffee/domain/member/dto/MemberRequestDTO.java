@@ -3,17 +3,14 @@ package team9.gccoffee.domain.member.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
 
-import static team9.gccoffee.domain.member.domain.MemberType.CUSTOMER;
 
-
-@Data
+@Getter @Setter
 @NoArgsConstructor
 public class MemberRequestDTO { //등록 시 사용
 

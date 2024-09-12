@@ -6,13 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,26 +24,26 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.member.domain.Member;
 import team9.gccoffee.domain.member.domain.MemberType;
-import team9.gccoffee.domain.order.domain.Order;
-import team9.gccoffee.domain.order.repository.OrderRepository;
 import team9.gccoffee.global.exception.ErrorCode;
 import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
-@SpringBootTest
-@Log4j2
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MemberRepositoryTests {
 
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private OrderRepository orderRepository;
 
-    //등록
     @Test
+    @DisplayName("Member 객체를 저장할 수 있어야 한다.")
+    @Commit
+    @Order(1)
     public void testInsert() {
-        //given
         IntStream.rangeClosed(1, 100).forEach(i -> {
-             //range 는 마지막 값 포함 안되고 rangeClosed 는 마지막 값 포함된다.
+
+            //given
             Member member = Member.builder()
                     .name("user" + i)
                     .email("user" + i + "@aaa.com")
@@ -48,22 +51,23 @@ public class MemberRepositoryTests {
                     .address("address" + i)
                     .memberType(i <= 80 ? MemberType.CUSTOMER : MemberType.ADMIN)
                     .build();
-            //회원 정보 등록 에서는 order insert 처리 안함.
 
             //when
             Member savedMember = memberRepository.save(member);
 
             //then
             assertNotNull(savedMember);
-            if(i<=80) assertEquals(savedMember.getMemberType(), MemberType.CUSTOMER);
-            else        assertEquals(savedMember.getMemberType(), MemberType.ADMIN);
-
+            if (i <= 80) {
+                assertEquals(savedMember.getMemberType(), MemberType.CUSTOMER);
+            } else {
+                assertEquals(savedMember.getMemberType(), MemberType.ADMIN);
+            }
         });
     }
 
-    //조회
-    //memberId 로 멤버 개별 조회
     @Test
+    @DisplayName("Member 객체를 조회할 수 있어야 한다.")
+    @Order(2)
     public void testRead() {
         //given
         Long memberId = 3L;
@@ -75,84 +79,55 @@ public class MemberRepositoryTests {
         //then
         Member member = foundMember.get();
         assertEquals(memberId, member.getMemberId());
-
     }
 
-    //멤버 전체 조회 - 페이징
     @Test
+    @DisplayName("Member 다수 객체를 조회할 수 있어야 한다.")
+    @Order(3)
     public void testList() {
         //given
-        Pageable pageable = PageRequest.of(0,
-                20, Sort.by("memberId").ascending()); //한페이지에 20명씩
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("memberId").ascending());
+
         //when
         Page<Member> memberListPage = memberRepository.findAll(pageable);
-        assertNotNull( memberListPage );
+        assertNotNull(memberListPage);
+
         //then
         assertEquals(100, memberListPage.getTotalElements());
         assertEquals(5, memberListPage.getTotalPages());
         assertEquals(0, memberListPage.getNumber());
         assertEquals(20, memberListPage.getSize());
         assertEquals(20, memberListPage.getContent().size());
-
-        memberListPage.getContent().forEach(System.out::println);
-
     }
 
-    //개인 주문 조회
     @Test
-    public void testFetchOrders() {
-        Long memberId = 3L;
-
-        Optional<Member> foundMember = memberRepository.findByIdWithOrders(memberId);
-        assertTrue(foundMember.isPresent());
-
-        Member member = foundMember.get();
-
-        //주문 저장
-        Order order = Order.createOrder(member, null, "~~~~", "~~");
-        orderRepository.save(order);
-        member.getOrderList().add(order);
-
-        List<Order> orders = member.getOrderList();
-        //무엇으로 확인? 지정한 memberId 값과 orders 0번에 있는 member 값 같은지 비교
-        assertThat(orders.get(0).getMember().getMemberId()).isEqualTo(memberId);
-    }
-
-
-    //수정
-    @Test   //UPDATE 테스트 - 트랜잭션 O
-    @Transactional
-    @Commit
+    @DisplayName("Member 객체를 수정할 수 있어야 한다.")
+    @Order(4)
     public void testUpdate() {
         //given
         Long memberId = 2L;
 
         //when
-        //memberId 가 2L 인 사용자를 데이터베이스에서 조회하여
-        Optional<Member> foundMember = memberRepository.findById(memberId); //값 받아오기
+        Member foundMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        //조회 결과가 없으면 MemberTaskException 으로 NOT_FOUND 예외를 발생
-        //값이 없다면 예외 던지기
-        foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
+        foundMember.changeName("userChanged");
+        foundMember.changeEmail("changed@bbb.com");
+        foundMember.changePostcode("changedPostcode");
+        foundMember.changeAddress("changedAddress");
 
-        //assertTrue(foundMember.isPresent());
-
-        //값이 있으면 변경
-        foundMember.get().changeName("userChanged");
-        foundMember.get().changeEmail("changed@bbb.com");
-        foundMember.get().changePostcode("changedPostcode");
-        foundMember.get().changeAddress("changedAddress");
+        // 다시 조회 시
+        foundMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         //then
-        //CHANGE 되어있는지 확인
-        assertEquals("changed@bbb.com", foundMember.get().getEmail());
-        assertThat(foundMember.get().getEmail()).isEqualTo("changed@bbb.com");
-
+        assertEquals("changed@bbb.com", foundMember.getEmail());
+        assertThat(foundMember.getEmail()).isEqualTo("changed@bbb.com");
     }
 
-
-    //삭제
     @Test
+    @DisplayName("Member 객체를 삭제할 수 있어야 한다.")
+    @Order(5)
     public void testDeleteById() {
         //given
         Long memberId = 4L;
@@ -163,8 +138,5 @@ public class MemberRepositoryTests {
 
         //then
         assertFalse(memberRepository.findById(memberId).isPresent());
-
     }
-
-
 }

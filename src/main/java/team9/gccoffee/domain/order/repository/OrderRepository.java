@@ -2,6 +2,7 @@ package team9.gccoffee.domain.order.repository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +15,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<OrderResponse> getOrderResponse(@Param("orderId") Long orderId);
 
     @Query("SELECT o FROM Order o")
-    List<OrderResponse> getOrderResponseList();
+    List<OrderResponse> getOrderResponseList(Pageable pageable);
+
+    @Query("SELECT o FROM Order o WHERE o.member.memberId = :memberId")
+    List<OrderResponse> getOrderResponseListByMemberId(@Param("memberId") Long memberId, Pageable pageAble);
 }
