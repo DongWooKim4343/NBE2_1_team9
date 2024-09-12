@@ -1,12 +1,10 @@
-package team9.gccoffee.domain.member.repository;
+package team9.gccoffee.domain.product.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +19,6 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.product.domain.Category;
 import team9.gccoffee.domain.product.domain.Product;
-import team9.gccoffee.domain.product.repository.ProductRepository;
 import team9.gccoffee.global.exception.ErrorCode;
 import team9.gccoffee.global.exception.GcCoffeeCustomException;
 
