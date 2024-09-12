@@ -27,7 +27,5 @@ public class MemberResponseDTO { //response
         this.memberType = member.getMemberType();
 
     }
-
-
 }
 

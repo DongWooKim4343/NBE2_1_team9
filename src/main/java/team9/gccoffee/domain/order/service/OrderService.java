@@ -142,10 +142,8 @@ public class OrderService {
     }
 
     public OrderItemResponse getOrderItem(Long orderItemId) {
-        OrderItemResponse orderItemResponse = orderItemRepository.getOrderItemResponse(orderItemId)
+        return orderItemRepository.getOrderItemResponse(orderItemId)
                 .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.ORDER_ITEM_NOT_FOUND));
-
-        return orderItemResponse;
     }
 
     public OrderItemResponse updateOrderItem(Long orderItemId, OrderItemUpdateDTO orderItemUpdateDTO) {
