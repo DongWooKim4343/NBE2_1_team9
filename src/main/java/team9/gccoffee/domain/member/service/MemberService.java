@@ -8,7 +8,6 @@ import team9.gccoffee.domain.member.dto.MemberRequestDTO;
 import team9.gccoffee.domain.member.dto.MemberResponseDTO;
 import team9.gccoffee.domain.member.dto.MemberUpdateDTO;
 
-@Service
 
 public interface MemberService {
     MemberResponseDTO getMemberById(Long memberId); //멤버 개별 조회
