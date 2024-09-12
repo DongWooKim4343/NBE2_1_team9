@@ -14,10 +14,10 @@ import team9.gccoffee.global.common.BaseTimeEntity;
 import java.util.List;
 
 @Entity
-@Getter @ToString
+@Getter @ToString(exclude = "orderList")
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE) //없으면 builder 패턴에서 오류
-@NoArgsConstructor(access = AccessLevel.PROTECTED) //jpa 가 entity 만들 때 파라미터 없는 것 필요
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -36,9 +36,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
-//    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-//    @Builder.Default
-//    private List<Order> orderList = new ArrayList<>();
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Order> orderList = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
     private MemberType memberType;

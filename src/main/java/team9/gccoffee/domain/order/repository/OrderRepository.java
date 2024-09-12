@@ -17,6 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o")
     List<OrderResponse> getOrderResponseList(Pageable pageable);
 
-    @Query("SELECT o from Order o WHERE o.member.memberId = :memberId")
+    @Query("SELECT o FROM Order o WHERE o.member.memberId = :memberId")
     List<OrderResponse> getOrderResponseListByMemberId(@Param("memberId") Long memberId, Pageable pageAble);
 }

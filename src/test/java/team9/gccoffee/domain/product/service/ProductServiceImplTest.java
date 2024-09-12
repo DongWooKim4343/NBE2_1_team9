@@ -118,18 +118,11 @@ class ProductServiceImplTest {
         assertThat(findProduct2.getCategory()).isEqualTo(saveProduct2.getCategory());
         assertThat(findProduct2.getDescription()).isEqualTo(saveProduct2.getDescription());
         assertThat(findProduct2.getStockQuantity()).isEqualTo(saveProduct2.getStockQuantity());
-
-
-
     }
-
 
     @Test
     void getAllProducts() {
-        MemberPageRequestDTO requestDTO = MemberPageRequestDTO.builder()
-                .page(1)
-                .size(20)
-                .build();
+        MemberPageRequestDTO requestDTO = new MemberPageRequestDTO();
         //MemberPageRequestDTO를 Product에서도 사용함
         //더미를 리스트에 추가
         List<Product> productList = Arrays.asList(saveProduct1, saveProduct2);
@@ -176,7 +169,6 @@ class ProductServiceImplTest {
         assertThat(productDB2.getStockQuantity()).isEqualTo(createProduct2.getStockQuantity());
         assertThat(productDB2.getDescription()).isEqualTo(createProduct2.getDescription());
         assertThat(productDB2.getPrice()).isEqualTo(createProduct2.getPrice());
-
     }
 
     @Test
@@ -201,8 +193,6 @@ class ProductServiceImplTest {
         updateDTO2.setCategory(Category.ETC);
         updateDTO2.setDescription("수정");
         updateDTO2.setStockQuantity(100000);
-
-
 
         // 고객이 수정할때 예외 발생 확인
         assertThatThrownBy(() -> productService.updateProduct(updateDTO))
