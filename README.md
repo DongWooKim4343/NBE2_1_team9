@@ -267,7 +267,7 @@
   - member Table DDL
         
     ```sql
-     CREATE TABLE IF NOT EXISTS member (
+    CREATE TABLE IF NOT EXISTS member ( 
     member_id BIGINT NOT NULL AUTO_INCREMENT,
     address VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -280,57 +280,57 @@
     )
     ```
     
-    - product Table DDL
+ - product Table DDL
         
-      ```sql
-      CREATE TABLE IF NOT EXISTS product (
-      product_id BIGINT NOT NULL AUTO_INCREMENT,
-      category ENUM('COFFEE1', 'COFFEE2', 'ETC') NOT NULL,
-      description VARCHAR(255) NULL DEFAULT NULL,
-      price INT NOT NULL,
-      product_name VARCHAR(255) NOT NULL,
-      stock_quantity INT NOT NULL,
-      created_at DATETIME(6) NOT NULL,
-      modified_at DATETIME(6) NULL DEFAULT NULL,
-      PRIMARY KEY (product_id)
+   ```sql
+   CREATE TABLE IF NOT EXISTS product (
+   product_id BIGINT NOT NULL AUTO_INCREMENT,
+   category ENUM('COFFEE1', 'COFFEE2', 'ETC') NOT NULL,
+   description VARCHAR(255) NULL DEFAULT NULL,
+   price INT NOT NULL,
+   product_name VARCHAR(255) NOT NULL,
+   stock_quantity INT NOT NULL,
+   created_at DATETIME(6) NOT NULL,
+   modified_at DATETIME(6) NULL DEFAULT NULL,
+   PRIMARY KEY (product_id)
         )
-        ```
+   ```
     
-        - orders Table DDL
+- orders Table DDL
         
-        ```sql
-        CREATE TABLE IF NOT EXISTS orders (
-        		order_id BIGINT NOT NULL AUTO_INCREMENT,
-        		member_id BIGINT NULL DEFAULT NULL,
-        		address VARCHAR(255) NOT NULL,
-        		order_status ENUM('CANCELLED', 'COMPLETED', 'CREATED') NULL DEFAULT NULL,
-        		postcode VARCHAR(255) NOT NULL,
-        		created_at DATETIME(6) NOT NULL,
-        		modified_at DATETIME(6) NULL DEFAULT NULL,
-        		PRIMARY KEY (order_id),
-        		FOREIGN KEY (member_id)
-        		REFERENCES member (member_id)
+   ```sql
+   CREATE TABLE IF NOT EXISTS orders (
+   order_id BIGINT NOT NULL AUTO_INCREMENT,
+   member_id BIGINT NULL DEFAULT NULL,
+   address VARCHAR(255) NOT NULL,
+   order_status ENUM('CANCELLED', 'COMPLETED', 'CREATED') NULL DEFAULT NULL,
+   postcode VARCHAR(255) NOT NULL,
+   created_at DATETIME(6) NOT NULL,
+   modified_at DATETIME(6) NULL DEFAULT NULL,
+   PRIMARY KEY (order_id),
+   FOREIGN KEY (member_id)
+   REFERENCES member (member_id)
         )
-        ```
+   ```
     
-        - order_item Table DDL
-         ```sql
-      CREATE TABLE IF NOT EXISTS order_item (
-      		order_item_id BIGINT NOT NULL AUTO_INCREMENT,
-      		order_id BIGINT NULL DEFAULT NULL,
-      		product_id BIGINT NULL DEFAULT NULL,
-      		category ENUM('COFFEE1', 'COFFEE2', 'ETC') NOT NULL,
-      		price INT NOT NULL,
-      		quantity INT NOT NULL,
-      		created_at DATETIME(6) NOT NULL,
-      		modified_at DATETIME(6) NULL DEFAULT NULL,
-      		PRIMARY KEY (order_item_id),
-      		FOREIGN KEY (product_id)
-      		REFERENCES product (product_id),
-      		FOREIGN KEY (order_id)
-      		REFERENCES testdb.orders (order_id)
-      )
-    ```
+- order_item Table DDL  
+   ```sql
+   CREATE TABLE IF NOT EXISTS order_item (
+   order_item_id BIGINT NOT NULL AUTO_INCREMENT,
+   order_id BIGINT NULL DEFAULT NULL,
+   product_id BIGINT NULL DEFAULT NULL,
+   category ENUM('COFFEE1', 'COFFEE2', 'ETC') NOT NULL,
+   price INT NOT NULL,
+   quantity INT NOT NULL,
+   created_at DATETIME(6) NOT NULL,
+   modified_at DATETIME(6) NULL DEFAULT NULL,
+   PRIMARY KEY (order_item_id),
+   FOREIGN KEY (product_id)
+   REFERENCES product (product_id),
+   FOREIGN KEY (order_id)
+   REFERENCES testdb.orders (order_id)
+      )  
+   ```
 </details>   
 
 
