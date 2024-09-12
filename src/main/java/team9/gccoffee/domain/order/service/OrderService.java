@@ -3,6 +3,8 @@ package team9.gccoffee.domain.order.service;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import team9.gccoffee.domain.member.domain.Member;
@@ -13,6 +15,7 @@ import team9.gccoffee.domain.order.domain.OrderStatus;
 import team9.gccoffee.domain.order.dto.OrderItemRequest;
 import team9.gccoffee.domain.order.dto.OrderItemResponse;
 import team9.gccoffee.domain.order.dto.OrderItemUpdateDTO;
+import team9.gccoffee.domain.order.dto.OrderPageRequest;
 import team9.gccoffee.domain.order.dto.OrderRequest;
 import team9.gccoffee.domain.order.dto.OrderResponse;
 import team9.gccoffee.domain.order.dto.OrderUpdateRequest;
@@ -87,8 +90,26 @@ public class OrderService {
                 .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.ORDER_NOT_FOUND));
     }
 
-    public List<OrderResponse> getOrderResponses() {
-        List<OrderResponse> orderResponseList = orderRepository.getOrderResponseList();
+    public List<OrderResponse> getOrderResponses(OrderPageRequest orderPageRequest) {
+        Sort sort = Sort.by("orderId").ascending();
+        Pageable pageAble = orderPageRequest.getPageAble(sort);
+
+        List<OrderResponse> orderResponseList = orderRepository.getOrderResponseList(pageAble);
+
+        if (orderResponseList.isEmpty()) {
+            throw  new GcCoffeeCustomException(ErrorCode.ORDER_NOT_FOUND);
+        }
+
+        return orderResponseList;
+    }
+
+    public List<OrderResponse> getMyOrders(Long memberId, OrderPageRequest orderPageRequest) {
+        memberRepository.findById(memberId).orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageAble = orderPageRequest.getPageAble(sort);
+
+        List<OrderResponse> orderResponseList = orderRepository.getOrderResponseListByMemberId(memberId, pageAble);
 
         if (orderResponseList.isEmpty()) {
             throw  new GcCoffeeCustomException(ErrorCode.ORDER_NOT_FOUND);
