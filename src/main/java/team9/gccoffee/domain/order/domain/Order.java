@@ -79,7 +79,6 @@ public class Order extends BaseTimeEntity {
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
         }
-
         return order;
     }
 

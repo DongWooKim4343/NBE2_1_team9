@@ -28,10 +28,8 @@ public class MemberPageRequestDTO {
     //페이지 번호, 페이지 회원목록 수 , 정렬 순서를 Pageable 객체로 반환
     public Pageable getPageable(Sort sort) {
         int pageNum = page < 0 ? 1 : page - 1;
-        int sizeNum = size <= 20 ? 20 : size ;
+        int sizeNum = size <= 20 ? 20 : size;
 
         return PageRequest.of(pageNum, sizeNum, sort);
-
     }
-
 }
