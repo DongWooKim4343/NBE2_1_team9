@@ -55,7 +55,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getOrderList(
             @Validated @ModelAttribute OrderPageRequest orderPageRequest
-    ) {
+            ) {
         List<OrderResponse> orderResponses = orderService.getOrderResponses(orderPageRequest);
 
         return ResponseEntity.ok(orderResponses);
@@ -126,7 +126,7 @@ public class OrderController {
             description = "해당 주문 ID의 주문을 취소 상태로 처리"
     )
     @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<Void> cancelorder(
+    public ResponseEntity<Void> cancelOrder(
             @PathVariable("orderId") Long orderId
     ) {
         orderService.cancelOrder(orderId);

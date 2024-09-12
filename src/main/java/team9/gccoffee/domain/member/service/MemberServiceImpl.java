@@ -1,9 +1,8 @@
 package team9.gccoffee.domain.member.service;
 
-import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -26,40 +25,35 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
-    //조회
-    //멤버 개인 조회
     @Override
     public MemberResponseDTO getMemberById(Long memberId) {
-        Optional<Member> foundMember = memberRepository.findById(memberId);
-        Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return new MemberResponseDTO(member);
     }
 
-    //멤버 전체 조회
     @Override
-    public Page<Member> getAllMembers(MemberPageRequestDTO memberPageRequestDTO, Long memberId) {
-        Optional<Member> foundMember = memberRepository.findById(memberId);
-        Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
+    public List<MemberResponseDTO> getAllMembers(MemberPageRequestDTO memberPageRequestDTO, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        //해당 member 의 memberType 체크 하여 관리자인 경우 전체 조회 가능
+        // 해당 member 의 memberType 체크 하여 관리자인 경우 전체 조회 가능
         if (member.getMemberType() == MemberType.ADMIN) {
             Sort sort = Sort.by("memberId").descending();
-
             Pageable pageable = memberPageRequestDTO.getPageable(sort);
-            return memberRepository.findAll(pageable);
+
+            return memberRepository.getMemberResponses(pageable);
         } else {
             throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_VALID);
         }
     }
 
-    //수정
     @Override
     public MemberResponseDTO updateMember(MemberUpdateDTO memberUpdateDTO) {
-        Optional<Member> foundMember
-                = memberRepository.findById(memberUpdateDTO.getId());
+        Member member = memberRepository.findById(memberUpdateDTO.getId())
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
         try {
             member.changeName(memberUpdateDTO.getName());
             member.changeEmail(memberUpdateDTO.getEmail());
@@ -72,11 +66,10 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    //삭제
     @Override
     public void deleteMember(Long memberId) {
-        Optional<Member> foundMember = memberRepository.findById(memberId);
-        Member member = foundMember.orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         try {
             memberRepository.delete(member);
@@ -85,15 +78,15 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    //등록
     @Override
     public MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO) {
-        if (memberRequestDTO.getMemberType() == MemberType.ADMIN || !"ADMIN000".equals(memberRequestDTO.getAdminCode())) {
+        if (memberRequestDTO.getMemberType() == MemberType.ADMIN && !"ADMIN000".equals(memberRequestDTO.getAdminCode())) {
             throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_VALID);
         }
         try {
             Member member = memberRequestDTO.toEntity();
             memberRepository.save(member);
+
             return new MemberResponseDTO(member);
         } catch (Exception e) {
             throw new GcCoffeeCustomException(ErrorCode.MEMBER_NOT_REGISTERED);

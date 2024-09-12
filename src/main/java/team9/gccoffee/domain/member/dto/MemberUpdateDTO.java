@@ -1,15 +1,11 @@
 package team9.gccoffee.domain.member.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import team9.gccoffee.domain.member.domain.Member;
 
-@Data
-@NoArgsConstructor
-public class MemberUpdateDTO { //request
-
+@Getter
+@AllArgsConstructor
+public class MemberUpdateDTO {
     private Long id;
     private String name;
     private String email;
